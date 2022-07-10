@@ -4,18 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
-class PostList extends StatefulWidget {
+class PostList extends StatelessWidget {
   PostList({Key? key}) : super(key: key);
   final postController = Get.put(PostController());
-
-  @override
-  State<PostList> createState() => _PostListState();
-}
-
-class _PostListState extends State<PostList> {
   final String stockName = '삼성전자';
   final int stockCount = 179093480;
-  var f = NumberFormat('###,###,###,###');
+  final f = NumberFormat('###,###,###,###');
 
   Widget alarmIconButton(BuildContext context) {
     return IconButton(
@@ -138,9 +132,7 @@ class _PostListState extends State<PostList> {
     );
   }
 
-  Widget writerInfoContainer(context) {
-    String userName = '주주연대회장';
-    int holdCount = 1000;
+  Widget writerInfoContainer(context, userName, holdCount) {
     return Row(
       children: [
         Text(userName, style: Theme.of(context).textTheme.titleMedium),
@@ -156,14 +148,11 @@ class _PostListState extends State<PostList> {
     );
   }
 
-  Widget createdTimeContainer() {
-    String createdTime = '40분전';
+  Widget createdTimeContainer(context, createdTime) {
     return Text(createdTime, style: Theme.of(context).textTheme.bodySmall);
   }
 
-  Widget viewCountContainer(context) {
-    int viewCount = 1200;
-
+  Widget viewCountContainer(context, viewCount) {
     return Row(
       children: [
         SvgPicture.asset(
@@ -182,9 +171,7 @@ class _PostListState extends State<PostList> {
     );
   }
 
-  Widget likeCountContainer(context) {
-    int likeCount = 1200;
-
+  Widget likeCountContainer(context, likeCount) {
     return Row(
       children: [
         SvgPicture.asset(
@@ -203,9 +190,7 @@ class _PostListState extends State<PostList> {
     );
   }
 
-  Widget replyCountContainer(context) {
-    int replyCount = 1200;
-
+  Widget commentCountContainer(context, commentCount) {
     return Row(
       children: [
         SvgPicture.asset(
@@ -217,17 +202,22 @@ class _PostListState extends State<PostList> {
           width: 2,
         ),
         Text(
-          '$replyCount',
+          '$commentCount',
           style: Theme.of(context).textTheme.bodyMedium,
         )
       ],
     );
   }
 
-  Widget postContainer(context) {
-    String postTitle = '임시주총을 준비하며 주주분들에게 알려드립니다.';
-    String postContent =
-        '안녕하세요 주주님들, 현재 모인 주식 수량은 750,426주로 소액주주운동은 단기적으로 주가를 올려';
+  Widget postContainer(context, controller, index) {
+    String postTitle = '${controller.posts[index].postTitle}';
+    String postContent = '${controller.posts[index].postContent}';
+    int viewCount = controller.posts[index].viewCount;
+    int likeCount = controller.posts[index].likeCount;
+    int commentCount = controller.posts[index].commentCount;
+    String createdTime = controller.posts[index].createdAt;
+    String userName = controller.posts[index].userName;
+    int holdCount = 0;
 
     return Container(
       decoration: BoxDecoration(
@@ -240,7 +230,10 @@ class _PostListState extends State<PostList> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [writerInfoContainer(context), createdTimeContainer()],
+            children: [
+              writerInfoContainer(context, userName, holdCount),
+              createdTimeContainer(context, createdTime)
+            ],
           ),
           const SizedBox(
             height: 6,
@@ -259,14 +252,14 @@ class _PostListState extends State<PostList> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              viewCountContainer(context),
+              viewCountContainer(context, viewCount),
               Row(
                 children: [
-                  likeCountContainer(context),
+                  likeCountContainer(context, likeCount),
                   const SizedBox(
                     width: 20,
                   ),
-                  replyCountContainer(context)
+                  commentCountContainer(context, commentCount)
                 ],
               )
             ],
@@ -284,12 +277,15 @@ class _PostListState extends State<PostList> {
         body: Column(
           children: [
             headContainer(context),
-            Expanded(
+            Expanded(child: GetX<PostController>(builder: (controller) {
+              return Scrollbar(
                 child: ListView.builder(
-                    itemCount: 1,
+                    itemCount: controller.posts.length,
                     itemBuilder: (context, index) {
-                      return postContainer(context);
-                    }))
+                      return postContainer(context, controller, index);
+                    }),
+              );
+            }))
           ],
         ),
       ),

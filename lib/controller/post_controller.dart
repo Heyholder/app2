@@ -1,15 +1,12 @@
-import 'dart:io';
 import 'dart:convert';
-import 'dart:async';
-
-import 'package:flutter/widgets.dart';
+import 'dart:io';
 import 'package:get/get.dart';
 import '../model/post.dart';
 import 'package:http/http.dart' as http;
 
 class PostController extends GetxController {
-  var posts = <Post>[].obs;
-  String stockCode = "dddddd";
+  final posts = <Post>[].obs;
+  String stockCode = "000000";
 
   @override
   void onInit() {
@@ -28,7 +25,10 @@ class PostController extends GetxController {
     final uri = Uri.parse('$ip/api/v1/$stockCode/posts');
     var response = await http.get(uri);
     if (response.statusCode == 200) {
-      print(response.body);
+      Iterable dataList = jsonDecode(response.body)["list"];
+      List<Post> postList =
+          List<Post>.from(dataList.map((data) => Post.fromJson(data)).toList());
+      posts.assignAll(postList);
     }
   }
 }
