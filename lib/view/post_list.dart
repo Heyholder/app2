@@ -1,4 +1,10 @@
-import 'package:app/controller/post_controller.dart';
+import 'package:app/controller/postlist_controller.dart';
+import 'package:app/view/bottom_navigation_bar.dart';
+import 'package:app/view/count_container.dart';
+import 'package:app/view/icon_button.dart';
+import 'package:app/view/post_detail.dart';
+import 'package:app/view/writer_info.dart';
+import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -6,39 +12,33 @@ import 'package:get/get.dart';
 
 class PostList extends StatelessWidget {
   PostList({Key? key}) : super(key: key);
-  final postController = Get.put(PostController());
+  final postListController = Get.put(PostListController());
   final String stockName = '삼성전자';
   final int stockCount = 179093480;
   final f = NumberFormat('###,###,###,###');
-
-  Widget alarmIconButton(BuildContext context) {
-    return IconButton(
-        padding: EdgeInsets.zero,
-        constraints: const BoxConstraints(),
-        onPressed: () {},
-        icon: SvgPicture.asset(
-          'assets/images/btn_alarm_w.svg',
-        ));
-  }
-
-  Widget stockListButton(BuildContext context) {
-    return IconButton(
-        padding: EdgeInsets.zero,
-        constraints: const BoxConstraints(),
-        onPressed: () {},
-        icon: SvgPicture.asset('assets/images/btn_gnb_mylist_w.svg'));
-  }
 
   Widget appBarContainer(context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        alarmIconButton(context),
+        IconButton2(
+            iconSize: 25.0,
+            icon: const Icon(
+              Icons.notifications_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () {}),
         const SizedBox(
           width: 20,
         ),
-        stockListButton(context)
+        IconButton2(
+            iconSize: 25.0,
+            icon: const Icon(
+              Icons.all_inbox_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () {}),
       ],
     );
   }
@@ -122,94 +122,47 @@ class PostList extends StatelessWidget {
     );
   }
 
-  Widget nameSeparator() {
-    return SizedBox(
-      width: 1,
-      height: 9,
-      child: Container(
-        color: const Color(0xffcacbd4),
-      ),
-    );
-  }
-
-  Widget writerInfoContainer(context, userName, holdCount) {
-    return Row(
-      children: [
-        Text(userName, style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(
-          width: 5.0,
-        ),
-        nameSeparator(),
-        const SizedBox(
-          width: 5.0,
-        ),
-        Text('$holdCount주', style: Theme.of(context).textTheme.titleSmall)
-      ],
-    );
-  }
-
-  Widget createdTimeContainer(context, createdTime) {
+  Widget createdTimeContainer(context, String createdTime) {
     return Text(createdTime, style: Theme.of(context).textTheme.bodySmall);
   }
 
-  Widget viewCountContainer(context, viewCount) {
-    return Row(
-      children: [
-        SvgPicture.asset(
-          'assets/images/ic_view.svg',
-          width: 16,
-          height: 16,
+  Widget postContentContainer(postContent) {
+    return ExtendedText(
+      postContent,
+      style: const TextStyle(
+        fontFamily: 'Noto_Sans_KR',
+        fontSize: 13,
+        color: Color(0xff696c75),
+        fontWeight: FontWeight.w400,
+      ),
+      joinZeroWidthSpace: false,
+      overflowWidget: TextOverflowWidget(
+        position: TextOverflowPosition.end,
+        align: TextOverflowAlign.center,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: const <Widget>[
+            Text('\u2026 '),
+            InkWell(
+              child: Text('더보기',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontFamily: 'Noto_Sans_KR',
+                    fontSize: 12,
+                    decoration: TextDecoration.underline,
+                    color: Color(0xff696c75),
+                    fontWeight: FontWeight.w400,
+                  )),
+            ),
+          ],
         ),
-        const SizedBox(
-          width: 2,
-        ),
-        Text(
-          '$viewCount',
-          style: Theme.of(context).textTheme.bodyMedium,
-        )
-      ],
-    );
-  }
-
-  Widget likeCountContainer(context, likeCount) {
-    return Row(
-      children: [
-        SvgPicture.asset(
-          'assets/images/ic_thumbs.svg',
-          width: 16,
-          height: 16,
-        ),
-        const SizedBox(
-          width: 2,
-        ),
-        Text(
-          '$likeCount',
-          style: Theme.of(context).textTheme.bodyMedium,
-        )
-      ],
-    );
-  }
-
-  Widget commentCountContainer(context, commentCount) {
-    return Row(
-      children: [
-        SvgPicture.asset(
-          'assets/images/ic_reply.svg',
-          width: 16,
-          height: 16,
-        ),
-        const SizedBox(
-          width: 2,
-        ),
-        Text(
-          '$commentCount',
-          style: Theme.of(context).textTheme.bodyMedium,
-        )
-      ],
+      ),
+      maxLines: 2,
     );
   }
 
   Widget postContainer(context, controller, index) {
+    int postId = controller.posts[index].id;
     String postTitle = '${controller.posts[index].postTitle}';
     String postContent = '${controller.posts[index].postContent}';
     int viewCount = controller.posts[index].viewCount;
@@ -217,76 +170,116 @@ class PostList extends StatelessWidget {
     int commentCount = controller.posts[index].commentCount;
     String createdTime = controller.posts[index].createdAt;
     String userName = controller.posts[index].userName;
-    int holdCount = 0;
+    int holdCount = controller.posts[index].holdCount;
 
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(
-                  width: 1.0, color: Theme.of(context).dividerColor))),
-      padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              writerInfoContainer(context, userName, holdCount),
-              createdTimeContainer(context, createdTime)
-            ],
-          ),
-          const SizedBox(
-            height: 6,
-          ),
-          Text(postTitle, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(
-            height: 20,
-          ),
-          Text(
-            postContent,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              viewCountContainer(context, viewCount),
-              Row(
-                children: [
-                  likeCountContainer(context, likeCount),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  commentCountContainer(context, commentCount)
-                ],
-              )
-            ],
-          )
-        ],
+    const viewAsset = 'assets/images/ic_view.svg';
+    const likeAsset = 'assets/images/ic_thumbs.svg';
+    const commentAsset = 'assets/images/ic_reply.svg';
+
+    return InkWell(
+      onTap: () {
+        Get.to(() => PostDetail(), arguments: postId);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            WriterInfo(userName: userName, holdCount: holdCount, createdTime: createdTime,),
+            const SizedBox(
+              height: 6,
+            ),
+            Text(postTitle, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(
+              height: 20,
+            ),
+            postContentContainer(postContent),
+            const SizedBox(
+              height: 24,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CountContainer(asset: viewAsset, count: viewCount),
+                Row(
+                  children: [
+                    CountContainer(asset: likeAsset, count: likeCount),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    CountContainer(asset: commentAsset, count: commentCount),
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget noContentContainer() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset(
+          'assets/images/noConent.svg',
+          width: 122.0,
+          height: 92.42,
+        ),
+        const SizedBox(
+          height: 40.6,
+        ),
+        const Text(
+          '이야기가 없어요.',
+          style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.w500,
+              color: Color(0xff696c75)),
+        ),
+        const SizedBox(
+          height: 8.0,
+        ),
+        const Text(
+          '첫 이야기를 작성해 보시는 건 어떨까요?',
+          style: TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff7F8088)),
+        ),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: Column(
-          children: [
-            headContainer(context),
-            Expanded(child: GetX<PostController>(builder: (controller) {
-              return Scrollbar(
-                child: ListView.builder(
-                    itemCount: controller.posts.length,
-                    itemBuilder: (context, index) {
-                      return postContainer(context, controller, index);
-                    }),
-              );
-            }))
-          ],
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: Column(
+            children: [
+              headContainer(context),
+              Expanded(child: GetX<PostListController>(builder: (controller) {
+                if (controller.posts.isNotEmpty) {
+                  return Scrollbar(
+                    child: ListView.separated(
+                      itemCount: controller.posts.length,
+                      itemBuilder: (context, index) {
+                        return postContainer(context, controller, index);
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(),
+                    ),
+                  );
+                } else {
+                  return noContentContainer();
+                }
+              }))
+            ],
+          ),
+          bottomNavigationBar: const BottomNavBar(),
         ),
       ),
     );

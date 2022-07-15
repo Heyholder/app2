@@ -1,7 +1,14 @@
 import 'package:app/view/post_list.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ),
+  );
   runApp(const MyApp());
 }
 
@@ -10,11 +17,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       theme: ThemeData(
           primaryColor: const Color(0xffe71915),
           hintColor: const Color(0xffFFCECE),
-          dividerColor: const Color(0xffE5E5E5),
           disabledColor: const Color(0xffCACBD4),
           dialogBackgroundColor: const Color(0xffC80E0A),
           scaffoldBackgroundColor: Colors.white,

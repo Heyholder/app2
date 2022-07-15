@@ -39,6 +39,8 @@ dependencies:
   intl: ^0.17.0
   get:
   http:
+  extended_text:
+  flutter_quill:
 
 dev_dependencies:
   flutter_test:
