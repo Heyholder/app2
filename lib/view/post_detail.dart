@@ -1,4 +1,5 @@
 import 'package:app/controller/postdetail_controller.dart';
+import 'package:app/view/comment_write.dart';
 import 'package:app/view/icon_button.dart';
 import 'package:app/view/text_button.dart';
 import 'package:app/view/writer_info.dart';
@@ -174,10 +175,7 @@ class PostDetail extends StatelessWidget {
                     child: postContainer(context, postDetailController),
                   ),
                 )),
-            TextFormField(
-              decoration: InputDecoration(labelText: "댓글등록"),
-              keyboardType: TextInputType.text,
-            )
+            const CommentWrite()
           ],
         ),
       )),
