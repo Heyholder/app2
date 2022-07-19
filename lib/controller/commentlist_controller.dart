@@ -9,25 +9,17 @@ class CommentListController extends GetxController {
   final int commentNo = 2;
   var comments = <CommentModel>[].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchData();
-  }
-
-  void fetchData() async {
+   Future<void> fetchData() async {
     String ip = "";
     ip = ipAddress();
 
     final uri = Uri.parse('$ip/api/v1/post-comment/$postNo/$commentNo');
     http.Response response = await http.get(uri);
     if (response.statusCode == 200) {
-      var dataList = jsonDecode(response.body)["list"];
+      List<dynamic> dataList = jsonDecode(response.body)["list"];
       List<CommentModel> postList = List<CommentModel>.from(
           dataList.map((data) => CommentModel.fromJson(data)).toList());
       comments.assignAll(postList);
-    } else {
-      print(response.statusCode);
     }
   }
 }

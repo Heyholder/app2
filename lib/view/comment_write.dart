@@ -1,7 +1,11 @@
+import 'package:app/controller/commentwrite_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CommentWrite extends StatelessWidget {
-  const CommentWrite({Key? key}) : super(key: key);
+  final _commentContent = TextEditingController();
+
+  CommentWrite({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +21,7 @@ class CommentWrite extends StatelessWidget {
         children: [
           Expanded(
             child: TextFormField(
+              controller: _commentContent,
               decoration: InputDecoration(
                   isDense: true,
                   contentPadding: const EdgeInsets.symmetric(
@@ -43,7 +48,10 @@ class CommentWrite extends StatelessWidget {
             width: 7.0,
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () async {
+              await Get.find<CommentWriteController>()
+                  .fetchData(_commentContent.text);
+            },
             style: ElevatedButton.styleFrom(
                 minimumSize: Size.zero,
                 padding:

@@ -27,7 +27,7 @@ class PostDetail extends StatelessWidget {
       height: 54.0,
       decoration: const BoxDecoration(
           border:
-              Border(bottom: BorderSide(width: 1.0, color: Color(0xffE5E5E5)))),
+          Border(bottom: BorderSide(width: 1.0, color: Color(0xffE5E5E5)))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,7 +84,7 @@ class PostDetail extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
       decoration: const BoxDecoration(
           border:
-              Border(bottom: BorderSide(width: 1.0, color: Color(0xffE5E5E5)))),
+          Border(bottom: BorderSide(width: 1.0, color: Color(0xffE5E5E5)))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -94,7 +94,10 @@ class PostDetail extends StatelessWidget {
           ),
           Text(
             postTitle,
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme
+                .of(context)
+                .textTheme
+                .titleLarge,
           ),
           const SizedBox(
             height: 6.0,
@@ -133,7 +136,10 @@ class PostDetail extends StatelessWidget {
               ),
               Text(
                 '$likeCount',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyMedium,
               ),
               const SizedBox(
                 width: 10,
@@ -148,7 +154,10 @@ class PostDetail extends StatelessWidget {
               ),
               Text(
                 '$commentCount',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyMedium,
               ),
             ],
           )
@@ -165,20 +174,28 @@ class PostDetail extends StatelessWidget {
       color: Colors.white,
       child: SafeArea(
           child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        resizeToAvoidBottomInset: true,
-        body: Column(
-          children: [
-            appBarContainer(),
-            Obx(() => Expanded(
-                  child: SingleChildScrollView(
-                    child: postContainer(context, postDetailController),
-                  ),
-                )),
-            const CommentWrite()
-          ],
-        ),
-      )),
+            backgroundColor: Theme
+                .of(context)
+                .scaffoldBackgroundColor,
+            resizeToAvoidBottomInset: true,
+            body: Column(
+              children: [
+                appBarContainer(),
+                Obx(() {
+                  if (postDetailController.post.isNotEmpty) {
+                    return Expanded(
+                      child: SingleChildScrollView(
+                        child: postContainer(context, postDetailController),
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
+                }),
+                CommentWrite()
+              ],
+            ),
+          )),
     );
   }
 }

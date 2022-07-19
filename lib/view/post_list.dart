@@ -180,7 +180,7 @@ class PostList extends StatelessWidget {
     return InkWell(
       onTap: () {
         detailController.fetchData(postId);
-        Get.to(() => PostDetail());
+        Get.to(() => const PostDetail());
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
@@ -259,9 +259,8 @@ class PostList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final postListController = Get.put(PostListController());
     final postDetailController = Get.put(PostDetailController());
+    final postListController = Get.put(PostListController());
 
     return Container(
       color: Theme.of(context).primaryColor,
@@ -271,20 +270,24 @@ class PostList extends StatelessWidget {
           body: Column(
             children: [
               headContainer(context),
-              Obx(
-                () => Expanded(
-                  child: Scrollbar(
+              Obx(() {
+                if (postListController.posts.isNotEmpty) {
+                  return Expanded(
+                      child: Scrollbar(
                     child: ListView.separated(
                       itemCount: postListController.posts.length,
                       itemBuilder: (context, index) {
-                        return postContainer(context, postListController, postDetailController, index);
+                        return postContainer(context, postListController,
+                            postDetailController, index);
                       },
                       separatorBuilder: (BuildContext context, int index) =>
                           const Divider(),
                     ),
-                  ),
-                ),
-              )
+                  ));
+                } else {
+                  return noContentContainer();
+                }
+              }),
             ],
           ),
           bottomNavigationBar: const BottomNavBar(),
