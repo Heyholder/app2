@@ -1,10 +1,14 @@
 import 'dart:convert';
 
 import 'package:app/network.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class CommentWriteController extends GetxController {
+  Rx<TextEditingController> commentEditingController =
+      TextEditingController().obs;
+
   Future<void> fetchData(data) async {
     String ip = "";
     ip = ipAddress();
