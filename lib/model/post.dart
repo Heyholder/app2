@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class PostModel {
   final int id;
   final String postTitle;

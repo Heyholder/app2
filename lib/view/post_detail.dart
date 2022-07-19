@@ -1,15 +1,13 @@
 import 'package:app/controller/postdetail_controller.dart';
-
 import 'package:app/view/icon_button.dart';
+import 'package:app/view/text_button.dart';
 import 'package:app/view/writer_info.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 class PostDetail extends StatelessWidget {
-  PostDetail({Key? key}) : super(key: key);
+  const PostDetail({Key? key}) : super(key: key);
 
-  final postDetailController = Get.put(PostDetailController());
   final stockName = '삼성전자';
 
   Widget stockNameContainer() {
@@ -62,42 +60,24 @@ class PostDetail extends StatelessWidget {
     );
   }
 
-  Widget reportButton() {
-    return TextButton(
-        onPressed: () {},
-        style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-            minimumSize: Size.zero,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-        child: const Text(
-          '신고하기',
-          style: TextStyle(
-              fontSize: 13.0,
-              fontWeight: FontWeight.w400,
-              color: Color(0xff7F8088),
-              decoration: TextDecoration.underline),
-        ));
-  }
-
   Widget headLineContainer() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [category(), reportButton()],
+      children: [
+        category(),
+        TextButton2(text: "신고하기", onPressed: () {}, fontSize: 13.0)
+      ],
     );
   }
 
-  Widget createdTimeContainer(context, String createdTime) {
-    return Text(createdTime, style: Theme.of(context).textTheme.bodySmall);
-  }
-
   Widget postContainer(context, controller) {
-    String postTitle = controller.post[0].postTitle;
-    String userName = controller.post[0].userName;
-    int holdCount = controller.post[0].holdCount;
-    String createdTime = controller.post[0].createdAt;
-    String postContent = controller.post[0].postContent;
-    int likeCount = controller.post[0].likeCount;
-    int commentCount = controller.post[0].commentCount;
+    String postTitle = controller.post.single.postTitle;
+    String userName = controller.post.single.userName;
+    String postContent = controller.post.single.postContent;
+    int holdCount = controller.post.single.holdCount;
+    String createdAt = controller.post.single.createdAt;
+    int likeCount = controller.post.single.likeCount;
+    int commentCount = controller.post.single.commentCount;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
@@ -118,7 +98,11 @@ class PostDetail extends StatelessWidget {
           const SizedBox(
             height: 6.0,
           ),
-          WriterInfo(userName: userName, holdCount: holdCount, createdTime: createdTime,),
+          WriterInfo(
+            userName: userName,
+            holdCount: holdCount,
+            createdAt: createdAt,
+          ),
           const SizedBox(
             height: 20.0,
           ),
@@ -156,7 +140,7 @@ class PostDetail extends StatelessWidget {
               Icon(
                 size: 17.0,
                 Icons.comment_outlined,
-                color: Color(0xff696c75),
+                color: const Color(0xff696c75),
               ),
               const SizedBox(
                 width: 2,
@@ -174,26 +158,25 @@ class PostDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PostDetailController postDetailController = Get.find();
+
     return Container(
       color: Colors.white,
       child: SafeArea(
           child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        resizeToAvoidBottomInset: true,
         body: Column(
           children: [
             appBarContainer(),
-            Expanded(
-              child: GetX<PostDetailController>(
-                builder: (controller) {
-                  return Scrollbar(
-                      child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return postContainer(context, controller);
-                    },
-                    itemCount: controller.post.length,
-                  ));
-                },
-              ),
+            Obx(() => Expanded(
+                  child: SingleChildScrollView(
+                    child: postContainer(context, postDetailController),
+                  ),
+                )),
+            TextFormField(
+              decoration: InputDecoration(labelText: "댓글등록"),
+              keyboardType: TextInputType.text,
             )
           ],
         ),

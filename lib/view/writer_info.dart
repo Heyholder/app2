@@ -5,12 +5,12 @@ class WriterInfo extends StatelessWidget {
       {Key? key,
       required this.userName,
       required this.holdCount,
-      required this.createdTime})
+      required this.createdAt})
       : super(key: key);
 
   final String userName;
   final int holdCount;
-  final String createdTime;
+  final String createdAt;
 
   Widget nameSeparator() {
     return SizedBox(
@@ -44,7 +44,7 @@ class WriterInfo extends StatelessWidget {
             Text('$holdCount주', style: Theme.of(context).textTheme.titleSmall)
           ],
         ),
-        createdTimeContainer(context, createdTime)
+        createdTimeContainer(context, createdAt)
       ],
     );
   }

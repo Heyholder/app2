@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 class IconButton2 extends StatelessWidget {
-  IconButton2(
-      {required this.iconSize, required this.icon, required this.onPressed});
+  const IconButton2(
+      {Key? key,
+      required this.iconSize,
+      required this.icon,
+      required this.onPressed})
+      : super(key: key);
 
   final double iconSize;
   final Widget icon;

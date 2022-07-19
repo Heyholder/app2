@@ -1,3 +1,4 @@
+import 'package:app/controller/postdetail_controller.dart';
 import 'package:app/controller/postlist_controller.dart';
 import 'package:app/view/bottom_navigation_bar.dart';
 import 'package:app/view/count_container.dart';
@@ -12,7 +13,7 @@ import 'package:get/get.dart';
 
 class PostList extends StatelessWidget {
   PostList({Key? key}) : super(key: key);
-  final postListController = Get.put(PostListController());
+
   final String stockName = '삼성전자';
   final int stockCount = 179093480;
   final f = NumberFormat('###,###,###,###');
@@ -161,7 +162,7 @@ class PostList extends StatelessWidget {
     );
   }
 
-  Widget postContainer(context, controller, index) {
+  Widget postContainer(context, controller, detailController, index) {
     int postId = controller.posts[index].id;
     String postTitle = '${controller.posts[index].postTitle}';
     String postContent = '${controller.posts[index].postContent}';
@@ -178,14 +179,19 @@ class PostList extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Get.to(() => PostDetail(), arguments: postId);
+        detailController.fetchData(postId);
+        Get.to(() => PostDetail());
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            WriterInfo(userName: userName, holdCount: holdCount, createdTime: createdTime,),
+            WriterInfo(
+              userName: userName,
+              holdCount: holdCount,
+              createdAt: createdTime,
+            ),
             const SizedBox(
               height: 6,
             ),
@@ -253,6 +259,10 @@ class PostList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final postListController = Get.put(PostListController());
+    final postDetailController = Get.put(PostDetailController());
+
     return Container(
       color: Theme.of(context).primaryColor,
       child: SafeArea(
@@ -261,22 +271,20 @@ class PostList extends StatelessWidget {
           body: Column(
             children: [
               headContainer(context),
-              Expanded(child: GetX<PostListController>(builder: (controller) {
-                if (controller.posts.isNotEmpty) {
-                  return Scrollbar(
+              Obx(
+                () => Expanded(
+                  child: Scrollbar(
                     child: ListView.separated(
-                      itemCount: controller.posts.length,
+                      itemCount: postListController.posts.length,
                       itemBuilder: (context, index) {
-                        return postContainer(context, controller, index);
+                        return postContainer(context, postListController, postDetailController, index);
                       },
                       separatorBuilder: (BuildContext context, int index) =>
                           const Divider(),
                     ),
-                  );
-                } else {
-                  return noContentContainer();
-                }
-              }))
+                  ),
+                ),
+              )
             ],
           ),
           bottomNavigationBar: const BottomNavBar(),

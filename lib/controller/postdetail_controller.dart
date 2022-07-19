@@ -1,21 +1,13 @@
 import 'dart:convert';
-
 import 'package:app/model/post.dart';
 import 'package:app/network.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class PostDetailController extends GetxController {
-  final int postNo = Get.arguments;
-  var post = <PostModel>[].obs;
+  final post = <PostModel>{}.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchData();
-  }
-
-  void fetchData() async {
+  Future<void> fetchData(int postNo) async {
     String ip = "";
     ip = ipAddress();
 
