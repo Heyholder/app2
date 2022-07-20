@@ -5,11 +5,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CommentListController extends GetxController {
-  final int postNo = 1;
-  final int commentNo = 2;
   var comments = <CommentModel>[].obs;
 
-   Future<void> fetchData() async {
+   Future<void> fetchData(int postNo, int commentNo) async {
     String ip = "";
     ip = ipAddress();
 
@@ -17,9 +15,9 @@ class CommentListController extends GetxController {
     http.Response response = await http.get(uri);
     if (response.statusCode == 200) {
       List<dynamic> dataList = jsonDecode(response.body)["list"];
-      List<CommentModel> postList = List<CommentModel>.from(
+      List<CommentModel> commentList = List<CommentModel>.from(
           dataList.map((data) => CommentModel.fromJson(data)).toList());
-      comments.assignAll(postList);
+      comments.assignAll(commentList);
     }
   }
 }

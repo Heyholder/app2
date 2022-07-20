@@ -5,7 +5,7 @@ import '../model/post.dart';
 import 'package:http/http.dart' as http;
 
 class PostListController extends GetxController {
-  var posts = <PostModel>[].obs;
+  final posts = <PostModel>[].obs;
   String stockCode = "000000";
 
   @override

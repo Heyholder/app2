@@ -1,15 +1,31 @@
+import 'package:app/controller/commentlist_controller.dart';
 import 'package:app/controller/commentwrite_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:app/controller/postdetail_controller.dart';
 
 class CommentWrite extends StatelessWidget {
-  CommentWrite({Key? key}) : super(key: key);
+  const CommentWrite(
+      {Key? key, required this.autoFocus, required this.upperCmtNo})
+      : super(key: key);
+  final bool autoFocus;
+  final int upperCmtNo;
 
   Widget unFocusedContainer(controller) {
-    PostDetailController postDetailController = Get.find();
+    final PostDetailController postDetailController = Get.find();
+    final CommentListController commentListController = Get.find();
     CommentWriteController commentWriteController =
         Get.put(CommentWriteController());
+    final int postNo = postDetailController.post.single.id;
+
+    Future<void> postDetailUpdate() async {
+      await postDetailController.fetchData(postDetailController.post.single.id);
+    }
+
+    Future<void> commentListUpdate() async {
+      await commentListController.fetchData(
+          postDetailController.post.single.id, upperCmtNo);
+    }
 
     Map<dynamic, dynamic> data = {};
     return Container(
@@ -24,6 +40,7 @@ class CommentWrite extends StatelessWidget {
         children: [
           Expanded(
             child: TextFormField(
+              autofocus: autoFocus,
               controller: commentWriteController.commentEditingController.value,
               decoration: InputDecoration(
                   isDense: true,
@@ -51,10 +68,9 @@ class CommentWrite extends StatelessWidget {
             width: 7.0,
           ),
           ElevatedButton(
-            onPressed: () {
-              data.putIfAbsent(
-                  "postNo", () => postDetailController.post.single.id);
-              data.putIfAbsent("upperCmtNo", () => "0");
+            onPressed: () async {
+              data.putIfAbsent("postNo", () => postNo);
+              data.putIfAbsent("upperCmtNo", () => upperCmtNo);
               data.putIfAbsent(
                   "commentText",
                   () => commentWriteController
@@ -64,7 +80,12 @@ class CommentWrite extends StatelessWidget {
               data.putIfAbsent("onskTisuCnt",
                   () => postDetailController.post.single.holdCount);
               data.putIfAbsent("userId", () => "1");
-              commentWriteController.fetchData(data);
+
+              await commentWriteController.fetchData(data);
+              commentWriteController.commentEditingController.value.clear();
+              data.clear();
+              await postDetailController
+                  .fetchData(postDetailController.post.single.id);
             },
             style: ElevatedButton.styleFrom(
                 minimumSize: Size.zero,

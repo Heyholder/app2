@@ -178,9 +178,9 @@ class PostList extends StatelessWidget {
     const commentAsset = 'assets/images/ic_reply.svg';
 
     return InkWell(
-      onTap: () {
-        detailController.fetchData(postId);
-        Get.to(() => const PostDetail());
+      onTap: () async{
+        await detailController.fetchData(postId);
+        Get.to(() => PostDetail());
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
@@ -276,7 +276,7 @@ class PostList extends StatelessWidget {
                       child: Scrollbar(
                     child: ListView.separated(
                       itemCount: postListController.posts.length,
-                      itemBuilder: (context, index) {
+                      itemBuilder: (BuildContext context, int index) {
                         return postContainer(context, postListController,
                             postDetailController, index);
                       },

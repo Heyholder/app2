@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app/model/comment.dart';
 import 'package:app/model/post.dart';
 import 'package:app/network.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 class PostDetailController extends GetxController {
   final post = <PostModel>{}.obs;
+  final comments = <CommentModel>[].obs;
 
   Future<void> fetchData(int postNo) async {
     String ip = "";
@@ -15,8 +17,12 @@ class PostDetailController extends GetxController {
     http.Response response = await http.get(uri);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+      List<dynamic> dataList = jsonDecode(response.body)["list"];
       PostModel postData = PostModel.fromJson(data["body"]);
+      List<CommentModel> commentList = List<CommentModel>.from(
+          dataList.map((data) => CommentModel.fromJson(data)).toList());
       post.assign(postData);
+      comments.assignAll(commentList);
     }
   }
 }

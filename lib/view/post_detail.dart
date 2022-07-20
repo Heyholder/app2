@@ -1,55 +1,22 @@
 import 'package:app/controller/postdetail_controller.dart';
-import 'package:app/view/comment_write.dart';
+import 'package:app/controller/postlist_controller.dart';
+import 'package:app/view/app_bar.dart';
 import 'package:app/view/icon_button.dart';
 import 'package:app/view/text_button.dart';
 import 'package:app/view/writer_info.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'comment_list.dart';
+import 'comment_write.dart';
+
 class PostDetail extends StatelessWidget {
-  const PostDetail({Key? key}) : super(key: key);
+  PostDetail({Key? key}) : super(key: key);
 
-  final stockName = '삼성전자';
+  final PostDetailController postDetailController = Get.find();
+  final PostListController postListController = Get.find();
 
-  Widget stockNameContainer() {
-    return Text(
-      stockName,
-      style: const TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.w500,
-          color: Color(0xff1e1e1e)),
-    );
-  }
-
-  Widget appBarContainer() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      height: 54.0,
-      decoration: const BoxDecoration(
-          border:
-              Border(bottom: BorderSide(width: 1.0, color: Color(0xffE5E5E5)))),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton2(
-              iconSize: 25.0,
-              icon: const Icon(Icons.arrow_back, color: Color(0xff1E1E1E)),
-              onPressed: () {
-                Get.back();
-              }),
-          stockNameContainer(),
-          IconButton2(
-              iconSize: 25.0,
-              icon: const Icon(
-                Icons.all_inbox_outlined,
-                color: Color(0xff1E1E1E),
-              ),
-              onPressed: () {}),
-        ],
-      ),
-    );
-  }
+  final title = '삼성전자';
 
   Widget category() {
     return const Text(
@@ -72,7 +39,6 @@ class PostDetail extends StatelessWidget {
   }
 
   Widget postContainer(context, controller) {
-
     String postTitle = controller.post.single.postTitle;
     String userName = controller.post.single.userName;
     String postContent = controller.post.single.postContent;
@@ -160,8 +126,6 @@ class PostDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PostDetailController postDetailController = Get.find();
-
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -174,19 +138,31 @@ class PostDetail extends StatelessWidget {
           resizeToAvoidBottomInset: true,
           body: Column(
             children: [
-              appBarContainer(),
+              AppBarContainer(
+                  title: title,
+                  onPressedBack: () async {
+                    await postListController.fetchData("000000");
+                    Get.back();
+                  }),
               Obx(() {
                 if (postDetailController.post.isNotEmpty) {
                   return Expanded(
-                    child: SingleChildScrollView(
-                      child: postContainer(context, postDetailController),
+                    child: Scrollbar(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            postContainer(context, postDetailController),
+                            CommentList(controller: postDetailController,),
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 } else {
                   return Container();
                 }
               }),
-              CommentWrite()
+              CommentWrite(autoFocus: false, upperCmtNo: 0,)
             ],
           ),
         )),
