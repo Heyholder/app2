@@ -7,8 +7,8 @@ import 'package:app/view/writer_info.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'comment_list.dart';
-import 'comment_write.dart';
+import '../comment/comment_list.dart';
+import '../comment/comment_write.dart';
 
 class PostDetail extends StatelessWidget {
   PostDetail({Key? key}) : super(key: key);
@@ -139,11 +139,14 @@ class PostDetail extends StatelessWidget {
           body: Column(
             children: [
               AppBarContainer(
-                  title: title,
-                  onPressedBack: () async {
-                    await postListController.fetchData("000000");
-                    Get.back();
-                  }),
+                title: title,
+                stockListOpacity: 1.0,
+                onPressedBack: () async {
+                  await postListController.fetchData("000000");
+                  Get.back();
+                },
+                stockListOnPressed: true,
+              ),
               Obx(() {
                 if (postDetailController.post.isNotEmpty) {
                   return Expanded(
@@ -152,7 +155,9 @@ class PostDetail extends StatelessWidget {
                         child: Column(
                           children: [
                             postContainer(context, postDetailController),
-                            CommentList(controller: postDetailController,),
+                            CommentList(
+                              controller: postDetailController,
+                            ),
                           ],
                         ),
                       ),
@@ -162,7 +167,10 @@ class PostDetail extends StatelessWidget {
                   return Container();
                 }
               }),
-              CommentWrite(autoFocus: false, upperCmtNo: 0,)
+              CommentWrite(
+                autoFocus: false,
+                upperCmtNo: 0,
+              )
             ],
           ),
         )),

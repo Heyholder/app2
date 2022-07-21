@@ -1,9 +1,9 @@
 import 'package:app/controller/commentlist_controller.dart';
 import 'package:app/view/app_bar.dart';
-import 'package:app/view/re_comment.dart';
+import 'package:app/view/comment/re_comment.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'comment_write.dart';
+import 'package:app/view/comment/comment_write.dart';
 
 class ReCommentList extends StatelessWidget {
   const ReCommentList({Key? key, required this.commentNo}) : super(key: key);
@@ -26,10 +26,13 @@ class ReCommentList extends StatelessWidget {
             body: Column(
               children: [
                 AppBarContainer(
-                    title: title,
-                    onPressedBack: () async {
-                      Get.back();
-                    }),
+                  stockListOpacity: 0.0,
+                  title: title,
+                  onPressedBack: () async {
+                    Get.back();
+                  },
+                  stockListOnPressed: false,
+                ),
                 Obx(() {
                   return Expanded(
                       child: Scrollbar(

@@ -1,29 +1,39 @@
 import 'package:app/controller/commentlist_controller.dart';
+import 'package:app/controller/postdetail_controller.dart';
+import 'package:app/view/comment/re_comment_list.dart';
 import 'package:flutter/material.dart';
 import 'package:app/view/text_button.dart';
 import 'package:app/view/writer_info.dart';
 import 'package:get/get.dart';
 
-class ReCommentContainer extends StatelessWidget {
-  ReCommentContainer({
+class CommentContainer extends StatelessWidget {
+  CommentContainer({
     Key? key,
     required this.index,
+    required this.postDetailController,
   }) : super(key: key);
 
   final int index;
+
+  final PostDetailController postDetailController;
   final CommentListController commentListController =
       Get.put(CommentListController());
 
   @override
   Widget build(BuildContext context) {
-    final String userName = commentListController.comments[index].userName;
-    final int holdCount = commentListController.comments[index].holdCount;
-    final String createdAt = commentListController.comments[index].createdAt;
+    final int postNo = postDetailController.post.single.id;
+    final int commentNo = postDetailController.comments[index].id;
+    final int parentNo = postDetailController.comments[index].parentCommentId;
+    final String userName = postDetailController.comments[index].userName;
+    final int holdCount = postDetailController.comments[index].holdCount;
+    final String createdAt = postDetailController.comments[index].createdAt;
     final String commentContent =
-        commentListController.comments[index].commentContent;
+        postDetailController.comments[index].commentContent;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 15.0),
+      padding: parentNo == 0
+          ? const EdgeInsets.symmetric(vertical: 18.0, horizontal: 15.0)
+          : const EdgeInsets.fromLTRB(30.0, 18.0, 15.0, 18.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -51,8 +61,11 @@ class ReCommentContainer extends StatelessWidget {
               ),
               TextButton2(
                   text: "댓글달기",
-                  onPressed: () {
-                    Get.to(() => {});
+                  onPressed: () async {
+                    await commentListController.fetchData(postNo, commentNo);
+                    Get.to(() => ReCommentList(
+                          commentNo: commentNo,
+                        ));
                   },
                   fontSize: 12.0)
             ],

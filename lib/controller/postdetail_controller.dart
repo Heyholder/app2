@@ -17,10 +17,10 @@ class PostDetailController extends GetxController {
     http.Response response = await http.get(uri);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      List<dynamic> dataList = jsonDecode(response.body)["list"];
+      List<dynamic> commentData = jsonDecode(response.body)["list"];
       PostModel postData = PostModel.fromJson(data["body"]);
       List<CommentModel> commentList = List<CommentModel>.from(
-          dataList.map((data) => CommentModel.fromJson(data)).toList());
+          commentData.map((data) => CommentModel.fromJson(data)).toList());
       post.assign(postData);
       comments.assignAll(commentList);
     }

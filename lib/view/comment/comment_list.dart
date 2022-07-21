@@ -1,5 +1,5 @@
 import 'package:app/controller/postdetail_controller.dart';
-import 'package:app/view/comment_container.dart';
+import 'package:app/view/comment/comment_container.dart';
 import 'package:flutter/material.dart';
 
 class CommentList extends StatelessWidget {

@@ -1,34 +1,27 @@
 import 'package:app/controller/commentlist_controller.dart';
-import 'package:app/controller/postdetail_controller.dart';
-import 'package:app/view/re_comment_list.dart';
 import 'package:flutter/material.dart';
 import 'package:app/view/text_button.dart';
 import 'package:app/view/writer_info.dart';
 import 'package:get/get.dart';
 
-class CommentContainer extends StatelessWidget {
-  CommentContainer({
+class ReCommentContainer extends StatelessWidget {
+  ReCommentContainer({
     Key? key,
     required this.index,
-    required this.postDetailController,
   }) : super(key: key);
 
   final int index;
-
-  final PostDetailController postDetailController;
   final CommentListController commentListController =
-      Get.put(CommentListController());
+      Get.find();
 
   @override
   Widget build(BuildContext context) {
-    final int postNo = postDetailController.post.single.id;
-    final int commentNo = postDetailController.comments[index].id;
-    final int parentNo = postDetailController.comments[index].parentCommentId;
-    final String userName = postDetailController.comments[index].userName;
-    final int holdCount = postDetailController.comments[index].holdCount;
-    final String createdAt = postDetailController.comments[index].createdAt;
+    final String userName = commentListController.comments[index].userName;
+    final int holdCount = commentListController.comments[index].holdCount;
+    final String createdAt = commentListController.comments[index].createdAt;
     final String commentContent =
-        postDetailController.comments[index].commentContent;
+        commentListController.comments[index].commentContent;
+    final int parentNo = commentListController.comments[index].parentCommentId;
 
     return Container(
       padding: parentNo == 0
@@ -61,11 +54,8 @@ class CommentContainer extends StatelessWidget {
               ),
               TextButton2(
                   text: "댓글달기",
-                  onPressed: () async {
-                    await commentListController.fetchData(postNo, commentNo);
-                    Get.to(() => ReCommentList(
-                          commentNo: commentNo,
-                        ));
+                  onPressed: () {
+                    Get.to(() => {});
                   },
                   fontSize: 12.0)
             ],

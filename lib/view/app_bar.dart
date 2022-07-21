@@ -3,11 +3,17 @@ import 'package:app/view/icon_button.dart';
 
 class AppBarContainer extends StatelessWidget {
   const AppBarContainer(
-      {Key? key, required this.title, required this.onPressedBack})
+      {Key? key,
+      required this.title,
+      required this.onPressedBack,
+      required this.stockListOpacity,
+      required this.stockListOnPressed})
       : super(key: key);
 
   final String title;
+  final double stockListOpacity;
   final VoidCallback onPressedBack;
+  final bool stockListOnPressed;
 
   Widget titleContainer() {
     return Text(
@@ -36,13 +42,16 @@ class AppBarContainer extends StatelessWidget {
               icon: const Icon(Icons.arrow_back, color: Color(0xff1E1E1E)),
               onPressed: onPressedBack),
           titleContainer(),
-          IconButton2(
+          Opacity(
+            opacity: stockListOpacity,
+            child: IconButton(
               iconSize: 25.0,
               icon: const Icon(
                 Icons.all_inbox_outlined,
                 color: Color(0xff1E1E1E),
-              ),
-              onPressed: () {}),
+              ),onPressed: stockListOnPressed ? () {} : null,
+            )
+          ),
         ],
       ),
     );

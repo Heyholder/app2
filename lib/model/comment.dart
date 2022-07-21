@@ -7,6 +7,8 @@ class CommentModel {
   final String userName;
   final int holdCount;
   final String createdAt;
+  final int level;
+  final List path;
 
   CommentModel(
       {required this.id,
@@ -16,7 +18,9 @@ class CommentModel {
       required this.commentContent,
       required this.userName,
       required this.holdCount,
-      required this.createdAt});
+      required this.createdAt,
+      required this.level,
+      required this.path});
 
   factory CommentModel.fromJson(Map<String, dynamic> json) => CommentModel(
       id: int.parse(json['cmt_no']),
@@ -26,5 +30,7 @@ class CommentModel {
       commentContent: json['comment_text'],
       userName: json['write_nm'],
       holdCount: json['onsk_tisu_cnt'],
-      createdAt: json['reg_date']);
+      createdAt: json['reg_date'],
+      level: json['level'],
+      path: json["path"]);
 }

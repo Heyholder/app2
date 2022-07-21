@@ -1,9 +1,8 @@
 import 'package:app/controller/postdetail_controller.dart';
 import 'package:app/controller/postlist_controller.dart';
-import 'package:app/view/bottom_navigation_bar.dart';
 import 'package:app/view/count_container.dart';
-import 'package:app/view/icon_button.dart';
-import 'package:app/view/post_detail.dart';
+import 'package:app/view/post/post_detail.dart';
+import 'package:app/view/stock_info.dart';
 import 'package:app/view/writer_info.dart';
 import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
@@ -17,111 +16,6 @@ class PostList extends StatelessWidget {
   final String stockName = '삼성전자';
   final int stockCount = 179093480;
   final f = NumberFormat('###,###,###,###');
-
-  Widget appBarContainer(context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        IconButton2(
-            iconSize: 25.0,
-            icon: const Icon(
-              Icons.notifications_outlined,
-              color: Colors.white,
-            ),
-            onPressed: () {}),
-        const SizedBox(
-          width: 20,
-        ),
-        IconButton2(
-            iconSize: 25.0,
-            icon: const Icon(
-              Icons.all_inbox_outlined,
-              color: Colors.white,
-            ),
-            onPressed: () {}),
-      ],
-    );
-  }
-
-  Widget stockCountContainer(context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          stockName,
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        Row(
-          children: [
-            Text(
-              f.format(stockCount),
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-            Text(
-              '주',
-              style: Theme.of(context).textTheme.headlineMedium,
-            )
-          ],
-        )
-      ],
-    );
-  }
-
-  Widget explainContainer(context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Heyholder 유저들의 $stockName 총 보유수량입니다.',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        Text(
-          '매일 밤 1시에 업데이트 됩니다.',
-          style: Theme.of(context).textTheme.headlineSmall,
-        )
-      ],
-    );
-  }
-
-  Widget stockStatusContainer(context) {
-    return Container(
-      height: 126.0,
-      decoration: BoxDecoration(
-          color: Theme.of(context).dialogBackgroundColor,
-          borderRadius: BorderRadius.circular(14)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [stockCountContainer(context), explainContainer(context)],
-        ),
-      ),
-    );
-  }
-
-  Widget headContainer(context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      height: 203.0,
-      decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
-      ),
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 15,
-          ),
-          appBarContainer(context),
-          const SizedBox(
-            height: 15,
-          ),
-          stockStatusContainer(context)
-        ],
-      ),
-    );
-  }
 
   Widget createdTimeContainer(context, String createdTime) {
     return Text(createdTime, style: Theme.of(context).textTheme.bodySmall);
@@ -178,7 +72,7 @@ class PostList extends StatelessWidget {
     const commentAsset = 'assets/images/ic_reply.svg';
 
     return InkWell(
-      onTap: () async{
+      onTap: () async {
         await detailController.fetchData(postId);
         Get.to(() => PostDetail());
       },
@@ -269,7 +163,7 @@ class PostList extends StatelessWidget {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: Column(
             children: [
-              headContainer(context),
+              StockInfo(),
               Obx(() {
                 if (postListController.posts.isNotEmpty) {
                   return Expanded(
@@ -290,7 +184,6 @@ class PostList extends StatelessWidget {
               }),
             ],
           ),
-          bottomNavigationBar: const BottomNavBar(),
         ),
       ),
     );

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CountContainer extends StatelessWidget {
-  CountContainer({required this.asset, required this.count});
+  const CountContainer({Key? key, required this.asset, required this.count})
+      : super(key: key);
 
   final String asset;
   final int count;

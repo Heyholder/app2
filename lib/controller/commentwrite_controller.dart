@@ -21,8 +21,5 @@ class CommentWriteController extends GetxController {
       },
       body: jsonEncode(data),
     );
-    if (response.statusCode == 201) {
-      print("등록완료");
-    }
   }
 }

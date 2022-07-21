@@ -1,4 +1,3 @@
-import 'package:app/controller/commentlist_controller.dart';
 import 'package:app/controller/commentwrite_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,19 +12,10 @@ class CommentWrite extends StatelessWidget {
 
   Widget unFocusedContainer(controller) {
     final PostDetailController postDetailController = Get.find();
-    final CommentListController commentListController = Get.find();
+
     CommentWriteController commentWriteController =
         Get.put(CommentWriteController());
     final int postNo = postDetailController.post.single.id;
-
-    Future<void> postDetailUpdate() async {
-      await postDetailController.fetchData(postDetailController.post.single.id);
-    }
-
-    Future<void> commentListUpdate() async {
-      await commentListController.fetchData(
-          postDetailController.post.single.id, upperCmtNo);
-    }
 
     Map<dynamic, dynamic> data = {};
     return Container(

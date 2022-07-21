@@ -1,4 +1,4 @@
-import 'package:app/view/post_list.dart';
+import 'package:app/view/navigation_page.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -61,8 +61,7 @@ class MyApp extends StatelessWidget {
                   fontSize: 10.0,
                   color: Color(0xff7F8088),
                   fontWeight: FontWeight.w400))),
-      initialRoute: '/',
-      routes: {'/': (_) => PostList()},
+      home: NavigationPage(),
     );
   }
 }
