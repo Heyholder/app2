@@ -1,8 +1,8 @@
-import 'package:app/view/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:app/view/app_bar.dart';
 
-class StockList extends StatelessWidget {
-  const StockList({Key? key}) : super(key: key);
+class WritePage extends StatelessWidget {
+  const WritePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,15 +13,15 @@ class StockList extends StatelessWidget {
           body: Column(
             children: const [
               AppBarContainer(
-                  rightIcon: Icon(
-                    Icons.all_inbox_outlined,
-                    color: Color(0xff1E1E1E),
-                  ),
-                  title: "나의 보유 종목",
+                  title: "글쓰기",
                   leftOnPressed: true,
                   leftOpacity: 1.0,
+                  rightOnPressed: false,
                   rightOpacity: 0.0,
-                  rightOnPressed: false)
+                  rightIcon: Icon(
+                    Icons.notifications_outlined,
+                    color: Color(0xff1E1E1E),
+                  ))
             ],
           ),
         ),

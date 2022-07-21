@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:app/view/icon_button.dart';
+import 'package:get/get.dart';
 
 class AppBarContainer extends StatelessWidget {
   const AppBarContainer(
       {Key? key,
       required this.title,
-      required this.onPressedBack,
-      required this.stockListOpacity,
-      required this.stockListOnPressed})
+      required this.leftOnPressed,
+      required this.rightOpacity,
+      required this.rightOnPressed,
+      required this.leftOpacity,
+      required this.rightIcon})
       : super(key: key);
 
   final String title;
-  final double stockListOpacity;
-  final VoidCallback onPressedBack;
-  final bool stockListOnPressed;
+  final double rightOpacity;
+  final double leftOpacity;
+  final bool leftOnPressed;
+  final bool rightOnPressed;
+  final Icon rightIcon;
 
   Widget titleContainer() {
     return Text(
@@ -37,21 +41,28 @@ class AppBarContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          IconButton2(
-              iconSize: 25.0,
-              icon: const Icon(Icons.arrow_back, color: Color(0xff1E1E1E)),
-              onPressed: onPressedBack),
+          Opacity(
+              opacity: leftOpacity,
+              child: IconButton(
+                  iconSize: 25.0,
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Color(0xff1E1E1E),
+                  ),
+                  onPressed: leftOnPressed
+                      ? () {
+                          Get.back();
+                        }
+                      : null,
+                  constraints: const BoxConstraints())),
           titleContainer(),
           Opacity(
-            opacity: stockListOpacity,
-            child: IconButton(
-              iconSize: 25.0,
-              icon: const Icon(
-                Icons.all_inbox_outlined,
-                color: Color(0xff1E1E1E),
-              ),onPressed: stockListOnPressed ? () {} : null,
-            )
-          ),
+              opacity: rightOpacity,
+              child: IconButton(
+                  iconSize: 25.0,
+                  icon: rightIcon,
+                  onPressed: rightOnPressed ? () {} : null,
+                  constraints: const BoxConstraints())),
         ],
       ),
     );

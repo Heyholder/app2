@@ -26,12 +26,15 @@ class ReCommentList extends StatelessWidget {
             body: Column(
               children: [
                 AppBarContainer(
-                  stockListOpacity: 0.0,
+                  rightIcon: Icon(
+                    Icons.all_inbox_outlined,
+                    color: Color(0xff1E1E1E),
+                  ),
+                  rightOpacity: 0.0,
                   title: title,
-                  onPressedBack: () async {
-                    Get.back();
-                  },
-                  stockListOnPressed: false,
+                  leftOnPressed: true,
+                  leftOpacity: 1.0,
+                  rightOnPressed: false,
                 ),
                 Obx(() {
                   return Expanded(

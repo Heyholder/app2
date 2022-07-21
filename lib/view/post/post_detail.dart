@@ -139,13 +139,15 @@ class PostDetail extends StatelessWidget {
           body: Column(
             children: [
               AppBarContainer(
+                rightIcon: Icon(
+                  Icons.all_inbox_outlined,
+                  color: Color(0xff1E1E1E),
+                ),
                 title: title,
-                stockListOpacity: 1.0,
-                onPressedBack: () async {
-                  await postListController.fetchData("000000");
-                  Get.back();
-                },
-                stockListOnPressed: true,
+                rightOnPressed: true,
+                rightOpacity: 1.0,
+                leftOnPressed: true,
+                leftOpacity: 1.0,
               ),
               Obx(() {
                 if (postDetailController.post.isNotEmpty) {

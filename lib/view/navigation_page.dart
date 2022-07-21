@@ -1,15 +1,19 @@
 import 'package:app/controller/navigation_controller.dart';
+import 'package:app/view/hotcontent/hot_list.dart';
+import 'package:app/view/mypage/mypage.dart';
 import 'package:app/view/post/post_list.dart';
 import 'package:app/view/propose/propose_list.dart';
+import 'package:app/view/write/write_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NavigationPage extends StatelessWidget {
-  final NavigationController navigationController = Get.put(NavigationController());
+  final NavigationController navigationController =
+      Get.put(NavigationController());
 
   NavigationPage({Key? key}) : super(key: key);
 
-  final screen = [PostList(), ProposeList()];
+  final screen = [PostList(), ProposeList(), WritePage(), HotList(), MyPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,11 @@ class NavigationPage extends StatelessWidget {
             selectedFontSize: 9.0,
             unselectedFontSize: 9.0,
             onTap: (index) {
-              navigationController.changeIndex(index);
+              if (index != 2) {
+                navigationController.changeIndex(index);
+              } else {
+                Get.to(() => WritePage());
+              }
             },
             currentIndex: navigationController.selectedIndex.value,
             items: const <BottomNavigationBarItem>[
