@@ -3,28 +3,20 @@ import 'package:app/view/post/post_list_screen.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 
-class PostListLocations extends BeamLocation<BeamState> {
+class HomeLocation extends BeamLocation<BeamState> {
   @override
-  // TODO: implement pathPatterns
-  List<Pattern> get pathPatterns => ["/"];
+  List<Pattern> get pathPatterns => ['/', 'auth'];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
-    final pages = [
-      const BeamPage(child: PostListScreen(), key: ValueKey('postList'))
+    return [
+      if (state.uri.path == '/auth')
+        const BeamPage(child: AuthScreen())
+      else
+        const BeamPage(
+            key: ValueKey('postList'),
+            title: 'PostList',
+            child: PostListScreen())
     ];
-    return pages;
-  }
-}
-
-class AuthLocations extends BeamLocation<BeamState> {
-  @override
-  // TODO: implement pathPatterns
-  List<Pattern> get pathPatterns => ["/auth"];
-
-  @override
-  List<BeamPage> buildPages(BuildContext context, BeamState state) {
-    final pages = [BeamPage(child: AuthScreen(), key: const ValueKey('Auth'))];
-    return pages;
   }
 }
