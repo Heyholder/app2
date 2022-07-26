@@ -13,8 +13,8 @@ class HomeLocation extends BeamLocation<BeamState> {
       if (state.uri.path == '/auth')
         const BeamPage(child: AuthScreen())
       else
-        const BeamPage(
-            key: ValueKey('postList'),
+        BeamPage(
+            key: const ValueKey('postList'),
             title: 'PostList',
             child: PostListScreen())
     ];

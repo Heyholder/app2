@@ -46,8 +46,46 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
                 primarySwatch: createMaterialColor(const Color(0xffe71915)),
+                dialogBackgroundColor: const Color(0xffC80E0A),
                 hintColor: const Color(0xffCACBD4),
-                fontFamily: "DoHyeon"),
+                fontFamily: "DoHyeon",
+                textTheme: const TextTheme(
+            headlineLarge: TextStyle(
+            fontSize: 24.0,
+                color: Colors.white,
+                fontWeight: FontWeight.w500),
+              headlineMedium: TextStyle(
+                  fontSize: 15.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400),
+              headlineSmall: TextStyle(
+                  fontSize: 11.0,
+                  color: Color(0xffFFCECE),
+                  fontWeight: FontWeight.w300),
+              titleLarge: TextStyle(
+                  fontSize: 17.0,
+                  color: Color(0xff1E1E1E),
+                  fontWeight: FontWeight.w500),
+              titleMedium: TextStyle(
+                  fontSize: 11.0,
+                  color: Color(0xff1E1E1E),
+                  fontWeight: FontWeight.w400),
+              titleSmall: TextStyle(
+                  fontSize: 11.0,
+                  color: Color(0xff845EC5),
+                  fontWeight: FontWeight.w400),
+              bodyLarge: TextStyle(
+                  fontSize: 13.0,
+                  color: Color(0xff696C75),
+                  fontWeight: FontWeight.w400),
+              bodyMedium: TextStyle(
+                  fontSize: 13.0,
+                  color: Color(0xff7F8088),
+                  fontWeight: FontWeight.w400),
+              bodySmall: TextStyle(
+                  fontSize: 10.0,
+                  color: Color(0xff7F8088),
+                  fontWeight: FontWeight.w400))),
             routeInformationParser: BeamerParser(),
             routerDelegate: _routerDelegate,
           ),

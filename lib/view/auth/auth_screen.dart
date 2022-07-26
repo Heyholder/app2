@@ -215,15 +215,27 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            // TODO: 모든 내용이 입력 되면 버튼 활성화, 인증 회사와 조회 연결.
-                            if (_formKey.currentState != null) {
-                              bool passed = _formKey.currentState!.validate();
-                              if (passed) {
-                                setState(() {
-                                  _verificationStatus =
-                                      VerificationStatus.codeSent;
-                                });
+                            final nameText = _nameEditingController.text;
+                            final birthText = _birthEditingController.text;
+                            final genderText = _genderEditingController.text;
+                            final phoneText =
+                                _phoneNumberEditingController.text;
+                            if (nameText.isNotEmpty &&
+                                birthText.isNotEmpty &&
+                                genderText.isNotEmpty &&
+                                phoneText.isNotEmpty) {
+                              // TODO: 모든 내용이 입력 되면 버튼 활성화, 인증 회사와 조회 연결.
+                              if (_formKey.currentState != null) {
+                                bool passed = _formKey.currentState!.validate();
+                                if (passed) {
+                                  setState(() {
+                                    _verificationStatus =
+                                        VerificationStatus.codeSent;
+                                  });
+                                }
                               }
+                            } else {
+                              null;
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -308,8 +320,6 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _verificationStatus = VerificationStatus.verifying;
     });
-
-    await Future.delayed(const Duration(seconds: 3));
 
     authNotifier.setUserAuth(true);
     setState(() {
