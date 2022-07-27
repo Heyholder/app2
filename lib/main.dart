@@ -14,7 +14,7 @@ final _routerDelegate = BeamerDelegate(
   guards: [
     BeamGuard(
       beamToNamed: (origin, target) => '/auth',
-      pathPatterns: ['/'],
+      pathPatterns: ['/', ...PostLocation().pathPatterns],
       check: (context, location) {
         return Provider.of<AuthenticationNotifier>(context, listen: false)
             .isAuthenticated;
@@ -29,9 +29,8 @@ final _routerDelegate = BeamerDelegate(
       },
     )
   ],
-  locationBuilder: BeamerLocationBuilder(beamLocations: [
-    HomeLocation(),
-  ]),
+  locationBuilder:
+      BeamerLocationBuilder(beamLocations: [HomeLocation(), PostLocation()]),
 );
 
 class MyApp extends StatelessWidget {

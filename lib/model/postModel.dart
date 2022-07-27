@@ -90,7 +90,7 @@ class PostModel {
 
   int? get viewCount => _viewCount;
 
-  String? get postNO => _postNo;
+  String? get postNo => _postNo;
 
   String? get writeName => _writeName;
 

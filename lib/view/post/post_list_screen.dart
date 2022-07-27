@@ -1,5 +1,7 @@
+import 'package:app/router/locations.dart';
 import 'package:app/service/post_list_service.dart';
 import 'package:app/model/postModel.dart';
+import 'package:app/utils/logger.dart';
 import 'package:app/view/count_container.dart';
 import 'package:app/view/stock_info.dart';
 import 'package:app/view/writer_info.dart';
@@ -7,6 +9,7 @@ import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:beamer/beamer.dart';
 
 class PostListScreen extends StatelessWidget {
   const PostListScreen({Key? key}) : super(key: key);
@@ -42,6 +45,7 @@ class PostListScreen extends StatelessWidget {
   }
 
   Widget postContainer(context, post) {
+    String postNo = post.postNo;
     String postTitle = '${post.postTitle}';
     String postContent = '${post.postContent}';
     int viewCount = post.viewCount;
@@ -56,7 +60,9 @@ class PostListScreen extends StatelessWidget {
     const commentAsset = 'assets/images/ic_reply.svg';
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Beamer.of(context).beamToNamed('/$locationPost/:$postNo');
+      },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20.0.h, horizontal: 15.0.w),
         child: Column(
