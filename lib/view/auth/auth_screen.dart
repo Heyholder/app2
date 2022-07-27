@@ -21,6 +21,16 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _codeEditingController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  @override
+  void dispose() {
+    _nameEditingController.dispose();
+    _birthEditingController.dispose();
+    _genderEditingController.dispose();
+    _phoneNumberEditingController.dispose();
+    _codeEditingController.dispose();
+    super.dispose();
+  }
+
   VerificationStatus _verificationStatus = VerificationStatus.none;
 
   Widget emptyBox() {

@@ -16,14 +16,16 @@ final _routerDelegate = BeamerDelegate(
       beamToNamed: (origin, target) => '/auth',
       pathPatterns: ['/'],
       check: (context, location) {
-        return Provider.of<AuthenticationNotifier>(context, listen: false).isAuthenticated;
+        return Provider.of<AuthenticationNotifier>(context, listen: false)
+            .isAuthenticated;
       },
     ),
     BeamGuard(
       beamToNamed: (origin, target) => '/',
       pathPatterns: ['/auth'],
       check: (context, location) {
-        return !Provider.of<AuthenticationNotifier>(context, listen: false).isAuthenticated;
+        return !Provider.of<AuthenticationNotifier>(context, listen: false)
+            .isAuthenticated;
       },
     )
   ],
@@ -49,43 +51,49 @@ class MyApp extends StatelessWidget {
                 dialogBackgroundColor: const Color(0xffC80E0A),
                 hintColor: const Color(0xffCACBD4),
                 fontFamily: "DoHyeon",
-                textTheme: const TextTheme(
-            headlineLarge: TextStyle(
-            fontSize: 24.0,
-                color: Colors.white,
-                fontWeight: FontWeight.w500),
-              headlineMedium: TextStyle(
-                  fontSize: 15.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400),
-              headlineSmall: TextStyle(
-                  fontSize: 11.0,
-                  color: Color(0xffFFCECE),
-                  fontWeight: FontWeight.w300),
-              titleLarge: TextStyle(
-                  fontSize: 17.0,
-                  color: Color(0xff1E1E1E),
-                  fontWeight: FontWeight.w500),
-              titleMedium: TextStyle(
-                  fontSize: 11.0,
-                  color: Color(0xff1E1E1E),
-                  fontWeight: FontWeight.w400),
-              titleSmall: TextStyle(
-                  fontSize: 11.0,
-                  color: Color(0xff845EC5),
-                  fontWeight: FontWeight.w400),
-              bodyLarge: TextStyle(
-                  fontSize: 13.0,
-                  color: Color(0xff696C75),
-                  fontWeight: FontWeight.w400),
-              bodyMedium: TextStyle(
-                  fontSize: 13.0,
-                  color: Color(0xff7F8088),
-                  fontWeight: FontWeight.w400),
-              bodySmall: TextStyle(
-                  fontSize: 10.0,
-                  color: Color(0xff7F8088),
-                  fontWeight: FontWeight.w400))),
+                textTheme: TextTheme(
+                    headlineLarge: TextStyle(
+                        fontSize: 24.0.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500),
+                    headlineMedium: TextStyle(
+                        fontSize: 15.0.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400),
+                    headlineSmall: TextStyle(
+                        fontSize: 11.0.sp,
+                        color: const Color(0xffFFCECE),
+                        fontWeight: FontWeight.w300),
+                    titleLarge: TextStyle(
+                        fontSize: 17.0.sp,
+                        color: const Color(0xff1E1E1E),
+                        fontWeight: FontWeight.w500),
+                    titleMedium: TextStyle(
+                        fontSize: 11.0.sp,
+                        color: const Color(0xff1E1E1E),
+                        fontWeight: FontWeight.w400),
+                    titleSmall: TextStyle(
+                        fontSize: 11.0.sp,
+                        color: const Color(0xff845EC5),
+                        fontWeight: FontWeight.w400),
+                    bodyLarge: TextStyle(
+                        fontSize: 13.0.sp,
+                        color: const Color(0xff696C75),
+                        fontWeight: FontWeight.w400),
+                    bodyMedium: TextStyle(
+                        fontSize: 13.0.sp,
+                        color: const Color(0xff7F8088),
+                        fontWeight: FontWeight.w400),
+                    bodySmall: TextStyle(
+                        fontSize: 10.0.sp,
+                        color: const Color(0xff7F8088),
+                        fontWeight: FontWeight.w400)),
+                bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                    backgroundColor: Colors.white,
+                    unselectedLabelStyle: TextStyle(
+                        fontSize: 9.0.sp, color: const Color(0xffB9BAC5)),
+                    selectedLabelStyle: TextStyle(
+                        fontSize: 9.0.sp, color: const Color(0xffe71915)))),
             routeInformationParser: BeamerParser(),
             routerDelegate: _routerDelegate,
           ),

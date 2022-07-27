@@ -1,7 +1,7 @@
-import 'package:app/view/icon_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-
 
 class StockInfo extends StatelessWidget {
   StockInfo({Key? key}) : super(key: key);
@@ -15,27 +15,19 @@ class StockInfo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        CustomIconButton(
-            iconSize: 25.0,
-            icon: const Icon(
-              Icons.notifications_outlined,
-              color: Colors.white,
-            ),
-            onPressed: () {
-
-            }),
-        const SizedBox(
-          width: 20,
+        SvgPicture.asset(
+          "assets/images/btn_alarm_w.svg",
+          width: 24.0.w,
+          height: 24.0.h,
         ),
-        CustomIconButton(
-            iconSize: 25.0,
-            icon: const Icon(
-              Icons.all_inbox_outlined,
-              color: Colors.white,
-            ),
-            onPressed: () {
-
-            }),
+        SizedBox(
+          width: 20.0.w,
+        ),
+        SvgPicture.asset(
+          "assets/images/btn_gnb_mylist_w100.svg",
+          width: 24.0.w,
+          height: 24.0.h,
+        ),
       ],
     );
   }
@@ -82,12 +74,12 @@ class StockInfo extends StatelessWidget {
 
   Widget stockStatusContainer(context) {
     return Container(
-      height: 126.0,
+      height: 126.0.h,
       decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
           borderRadius: BorderRadius.circular(14)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+        padding: EdgeInsets.symmetric(vertical: 24.0.h, horizontal: 20.0.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,19 +92,19 @@ class StockInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      height: 203.0,
+      padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+      height: 233.7.h,
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
       ),
       child: Column(
         children: [
-          const SizedBox(
-            height: 15,
+          SizedBox(
+            height: 32.7.h,
           ),
           appBarContainer(context),
-          const SizedBox(
-            height: 15,
+          SizedBox(
+            height: 29.0.h,
           ),
           stockStatusContainer(context)
         ],

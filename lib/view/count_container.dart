@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CountContainer extends StatelessWidget {
@@ -14,11 +15,11 @@ class CountContainer extends StatelessWidget {
       children: [
         SvgPicture.asset(
           asset,
-          width: 16,
-          height: 16,
+          width: 20.0.w,
+          height: 20.0.h,
         ),
-        const SizedBox(
-          width: 2,
+        SizedBox(
+          width: 2.0.w,
         ),
         Text(
           '$count',

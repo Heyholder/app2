@@ -3,10 +3,10 @@ import 'package:app/utils/logger.dart';
 import 'package:dio/dio.dart';
 import '../utils/network.dart';
 
-class PostListController {
+class PostListService {
   final String stockCode;
 
-  PostListController({required this.stockCode});
+  PostListService({required this.stockCode});
 
   Future<List<PostModel>> fetchData() async {
     String ip = "";

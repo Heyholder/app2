@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WriterInfo extends StatelessWidget {
   const WriterInfo(
@@ -14,8 +15,8 @@ class WriterInfo extends StatelessWidget {
 
   Widget nameSeparator() {
     return SizedBox(
-      width: 1,
-      height: 9,
+      width: 1.0.w,
+      height: 9.0.h,
       child: Container(
         color: const Color(0xffcacbd4),
       ),
@@ -34,12 +35,12 @@ class WriterInfo extends StatelessWidget {
         Row(
           children: [
             Text(userName, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(
-              width: 5.0,
+            SizedBox(
+              width: 5.0.w,
             ),
             nameSeparator(),
-            const SizedBox(
-              width: 5.0,
+            SizedBox(
+              width: 5.0.w,
             ),
             Text('$holdCount주', style: Theme.of(context).textTheme.titleSmall)
           ],
