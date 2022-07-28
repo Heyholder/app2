@@ -6,8 +6,9 @@ import 'package:intl/intl.dart';
 class StockInfo extends StatelessWidget {
   StockInfo({Key? key}) : super(key: key);
 
-  final String stockName = '삼성전자';
-  final int stockCount = 179093480;
+  //TODO: 종목명과 전체 수량 데이터로 받아올것.
+  final String _stockName = '삼성전자';
+  final int _stockCount = 179093480;
   final f = NumberFormat('###,###,###,###');
 
   Widget appBarContainer(context) {
@@ -37,13 +38,13 @@ class StockInfo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          stockName,
+          _stockName,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         Row(
           children: [
             Text(
-              f.format(stockCount),
+              f.format(_stockCount),
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             Text(
@@ -61,7 +62,7 @@ class StockInfo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Heyholder 유저들의 $stockName 총 보유수량입니다.',
+          'Heyholder 유저들의 $_stockName 총 보유수량입니다.',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         Text(

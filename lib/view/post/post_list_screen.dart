@@ -1,7 +1,6 @@
 import 'package:app/router/locations.dart';
 import 'package:app/service/post_list_service.dart';
 import 'package:app/model/postModel.dart';
-import 'package:app/utils/logger.dart';
 import 'package:app/view/count_container.dart';
 import 'package:app/view/stock_info.dart';
 import 'package:app/view/writer_info.dart';
@@ -52,7 +51,7 @@ class PostListScreen extends StatelessWidget {
     int likeCount = post.likeCount;
     int commentCount = post.commentCount;
     String createdTime = post.regDate;
-    String userName = post.writeName;
+    String writerName = post.writerName;
     int holdCount = post.holdCount;
 
     const viewAsset = 'assets/images/ic_view.svg';
@@ -61,7 +60,7 @@ class PostListScreen extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Beamer.of(context).beamToNamed('/$locationPost/:$postNo');
+        Beamer.of(context).beamToNamed('/$locationPost/$postNo');
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20.0.h, horizontal: 15.0.w),
@@ -69,7 +68,7 @@ class PostListScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             WriterInfo(
-              userName: userName,
+              userName: writerName,
               holdCount: holdCount,
               createdAt: createdTime,
             ),
@@ -154,7 +153,10 @@ class PostListScreen extends StatelessWidget {
             return postContainer(context, post);
           },
           separatorBuilder: (context, index) {
-            return const Divider();
+            return Divider(
+              height: 1.0.h,
+              thickness: 1.0.h,
+            );
           },
           itemCount: posts.length),
     );
