@@ -31,7 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
     super.dispose();
   }
 
-  VerificationStatus _verificationStatus = VerificationStatus.none;
+  _VerificationStatus _verificationStatus = _VerificationStatus.none;
 
   Widget emptyBox() {
     return SizedBox(
@@ -49,7 +49,7 @@ class _AuthScreenState extends State<AuthScreen> {
         child: Scaffold(
             body: SingleChildScrollView(
           child: IgnorePointer(
-            ignoring: _verificationStatus == VerificationStatus.verifying,
+            ignoring: _verificationStatus == _VerificationStatus.verifying,
             child: Form(
               key: _formKey,
               child: Padding(
@@ -224,30 +224,21 @@ class _AuthScreenState extends State<AuthScreen> {
                           width: 7.0.w,
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            final nameText = _nameEditingController.text;
-                            final birthText = _birthEditingController.text;
-                            final genderText = _genderEditingController.text;
-                            final phoneText =
-                                _phoneNumberEditingController.text;
-                            if (nameText.isNotEmpty &&
-                                birthText.isNotEmpty &&
-                                genderText.isNotEmpty &&
-                                phoneText.isNotEmpty) {
-                              // TODO: 모든 내용이 입력 되면 버튼 활성화, 인증 회사와 조회 연결.
-                              if (_formKey.currentState != null) {
-                                bool passed = _formKey.currentState!.validate();
-                                if (passed) {
-                                  setState(() {
-                                    _verificationStatus =
-                                        VerificationStatus.codeSent;
-                                  });
+                          onPressed: _isValid()
+                              ? () {
+                                  // TODO: 모든 내용이 입력 되면 버튼 활성화, 인증 회사와 조회 연결.
+                                  if (_formKey.currentState != null) {
+                                    bool passed =
+                                        _formKey.currentState!.validate();
+                                    if (passed) {
+                                      setState(() {
+                                        _verificationStatus =
+                                            _VerificationStatus.codeSent;
+                                      });
+                                    }
+                                  }
                                 }
-                              }
-                            } else {
-                              null;
-                            }
-                          },
+                              : null,
                           style: ElevatedButton.styleFrom(
                               fixedSize: Size(108.w, 58.h),
                               shape: RoundedRectangleBorder(
@@ -259,7 +250,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     emptyBox(),
                     AnimatedOpacity(
                       duration: const Duration(seconds: 1),
-                      opacity: getVerification(_verificationStatus)["opacity"],
+                      opacity: _getVerification(_verificationStatus)["opacity"],
                       child: SizedBox(
                         height: 58.0.h,
                         child: TextFormField(
@@ -270,7 +261,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           ],
                           controller: _codeEditingController,
                           enabled:
-                              getVerification(_verificationStatus)["enabled"],
+                              _getVerification(_verificationStatus)["enabled"],
                           decoration: InputDecoration(
                               contentPadding: EdgeInsets.only(left: 20.0.w),
                               hintText: "인증번호를 입력해주세요.",
@@ -288,13 +279,16 @@ class _AuthScreenState extends State<AuthScreen> {
                       height: 148.h,
                     ),
                     ElevatedButton(
-                      onPressed: () => attemptVerify(context),
+                      onPressed:
+                          _getVerification(_verificationStatus)["enabled"]
+                              ? () => _attemptVerify(context)
+                              : null,
                       style: ElevatedButton.styleFrom(
                           fixedSize: Size(345.w, 50.h),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8))),
                       child:
-                          (_verificationStatus == VerificationStatus.verifying)
+                          (_verificationStatus == _VerificationStatus.verifying)
                               ? const CircularProgressIndicator(
                                   color: Colors.white,
                                 )
@@ -310,32 +304,43 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  getVerification(VerificationStatus status) {
+  _getVerification(_VerificationStatus status) {
     var verification = {"enabled": false, "opacity": 0.0};
     switch (status) {
-      case VerificationStatus.none:
+      case _VerificationStatus.none:
         return verification;
-      case VerificationStatus.codeSent:
-      case VerificationStatus.verifying:
-      case VerificationStatus.verificationDone:
+      case _VerificationStatus.codeSent:
+      case _VerificationStatus.verifying:
+      case _VerificationStatus.verificationDone:
         verification["enabled"] = true;
         verification["opacity"] = 1.0;
         return verification;
     }
   }
 
-  void attemptVerify(BuildContext context) async {
+  void _attemptVerify(BuildContext context) async {
     var authNotifier = context.read<AuthenticationNotifier>();
 
     setState(() {
-      _verificationStatus = VerificationStatus.verifying;
+      _verificationStatus = _VerificationStatus.verifying;
     });
 
     authNotifier.setUserAuth(true);
     setState(() {
-      _verificationStatus = VerificationStatus.verificationDone;
+      _verificationStatus = _VerificationStatus.verificationDone;
     });
+  }
+
+  bool _isValid() {
+    final nameText = _nameEditingController.text;
+    final birthText = _birthEditingController.text;
+    final genderText = _genderEditingController.text;
+    final phoneText = _phoneNumberEditingController.text;
+    return (nameText.isNotEmpty &&
+        birthText.isNotEmpty &&
+        genderText.isNotEmpty &&
+        phoneText.isNotEmpty);
   }
 }
 
-enum VerificationStatus { none, codeSent, verifying, verificationDone }
+enum _VerificationStatus { none, codeSent, verifying, verificationDone }

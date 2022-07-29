@@ -8,7 +8,7 @@ class PostListService {
 
   PostListService({required this.stockCode});
 
-  Future<List<PostModel>> fetchData() async {
+  Future<List<PostModel>> getPosts() async {
     String ip = "";
     ip = ipAddress();
 

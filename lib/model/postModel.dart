@@ -85,7 +85,7 @@ class PostModel {
   String? _insId;
   int? _likeCount;
 
-  PostModel copyWith({
+  PostModel copyWith(Map map, {
     String? postTitle,
     int? holdCount,
     int? viewCount,

@@ -10,11 +10,35 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:beamer/beamer.dart';
 
-class PostListScreen extends StatelessWidget {
+class PostListScreen extends StatefulWidget {
   const PostListScreen({Key? key}) : super(key: key);
 
+  @override
+  State<PostListScreen> createState() => _PostListScreenState();
+}
+
+class _PostListScreenState extends State<PostListScreen> {
   //TODO:stockCode api에서 받아오게 수정할 것.
   final String _stockCode = "000000";
+  var _posts;
+  bool _init = false;
+
+  @override
+  void initState() {
+    if (!_init) {
+      _onRefresh();
+      _init = true;
+    }
+    super.initState();
+  }
+
+  Future<void> _onRefresh() async {
+    if (_posts != null) {
+      _posts.clear();
+    }
+    _posts = await PostListService(stockCode: _stockCode).getPosts();
+    setState(() {});
+  }
 
   Widget postContentContainer(context, postContent) {
     return ExtendedText(
@@ -104,61 +128,71 @@ class PostListScreen extends StatelessWidget {
     );
   }
 
-  Widget noContentContainer() {
-    return Expanded(
-      child: Container(
-        width: 375.0.w,
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              'assets/images/noConent.svg',
-              width: 122.0.w,
-              height: 92.42.h,
+  Widget noContentContainer(context) {
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverFillRemaining(
+            child: Container(
+              width: 375.0.w,
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/noConent.svg',
+                    width: 122.0.w,
+                    height: 92.42.h,
+                  ),
+                  SizedBox(
+                    height: 40.6.h,
+                  ),
+                  Text(
+                    '이야기가 없어요.',
+                    style: TextStyle(
+                        fontSize: 20.0.sp,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xff696c75)),
+                  ),
+                  SizedBox(
+                    height: 8.0.h,
+                  ),
+                  Text(
+                    '첫 이야기를 작성해 보시는 건 어떨까요?',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(fontSize: 12.0.sp),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(
-              height: 40.6.h,
-            ),
-            Text(
-              '이야기가 없어요.',
-              style: TextStyle(
-                  fontSize: 20.0.sp,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xff696c75)),
-            ),
-            SizedBox(
-              height: 8.0.h,
-            ),
-            Text(
-              '첫 이야기를 작성해 보시는 건 어떨까요?',
-              style: TextStyle(
-                  fontSize: 12.0.sp,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xff7F8088)),
-            ),
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
 
-  Widget _listView(List<PostModel> posts) {
-    return Container(
-      color: Colors.white,
-      child: ListView.separated(
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
-            PostModel post = posts[index];
-            return postContainer(context, post);
-          },
-          separatorBuilder: (context, index) {
-            return Divider(
-              height: 1.0.h,
-              thickness: 1.0.h,
-            );
-          },
-          itemCount: posts.length),
+  Widget _listView() {
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: Container(
+        color: Colors.white,
+        child: ListView.separated(
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) {
+              PostModel post = _posts[index];
+              return postContainer(context, post);
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 1.0.h,
+                thickness: 1.0.h,
+              );
+            },
+            itemCount: _posts.length),
+      ),
     );
   }
 
@@ -169,24 +203,15 @@ class PostListScreen extends StatelessWidget {
       child: Column(
         children: [
           StockInfo(),
-          FutureBuilder<List<PostModel>>(
-            future: PostListService(stockCode: _stockCode).fetchData(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData == false) {
-                return Expanded(
-                    child: Container(
-                        width: 375.0.w,
-                        color: Colors.white,
-                        child:
-                            const Center(child: CircularProgressIndicator())));
-              } else {
-                return (snapshot.data!.isNotEmpty)
-                    ? Expanded(
-                        child: Scrollbar(child: _listView(snapshot.data!)))
-                    : noContentContainer();
-              }
-            },
-          )
+          Expanded(
+              child: (_posts != null)
+                  ? (_posts.isNotEmpty)
+                      ? _listView()
+                      : noContentContainer(context)
+                  : Container(
+                      width: 375.0.w,
+                      color: Colors.white,
+                      child: const Center(child: CircularProgressIndicator()))),
         ],
       ),
     );

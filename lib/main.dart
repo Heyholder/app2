@@ -1,5 +1,6 @@
 import 'package:app/router/locations.dart';
 import 'package:app/states/auth_notifier.dart';
+import 'package:app/states/post_notifier.dart';
 import 'package:app/utils/material_color.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
@@ -41,8 +42,12 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       builder: (BuildContext context, Widget? child) {
-        return ChangeNotifierProvider<AuthenticationNotifier>.value(
-          value: authNotifier,
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider<AuthenticationNotifier>.value(
+                value: authNotifier),
+            ChangeNotifierProvider<PostNotifier>(create: (_) => PostNotifier())
+          ],
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(

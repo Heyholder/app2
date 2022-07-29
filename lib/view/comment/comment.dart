@@ -34,10 +34,10 @@ class Comment extends StatelessWidget {
           ),
           Text(
             commentContent!,
-            style: TextStyle(
-                fontSize: 12.0.sp,
-                fontWeight: FontWeight.w400,
-                color: const Color(0xff1E1E1E)),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(fontSize: 12.0.sp),
           ),
           SizedBox(
             height: 9.0.h,

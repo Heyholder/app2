@@ -1,8 +1,12 @@
+import 'package:app/service/comment_write_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-class CommentWrite extends StatelessWidget {
-  CommentWrite(
+import '../../states/post_notifier.dart';
+
+class CommentWrite extends StatefulWidget {
+  const CommentWrite(
       {Key? key,
       required this.autoFocus,
       required this.upperCmtNo,
@@ -11,13 +15,31 @@ class CommentWrite extends StatelessWidget {
   final bool autoFocus;
   final int upperCmtNo;
   final String postNo;
-  final TextEditingController commentEditingController =
+
+  @override
+  State<CommentWrite> createState() => _CommentWriteState();
+}
+
+class _CommentWriteState extends State<CommentWrite> {
+
+  Future<void> _onRefresh(BuildContext context) async {
+    await Provider.of<PostNotifier>(context, listen: false)
+        .getPost(widget.postNo);
+  }
+  final TextEditingController _commentEditingController =
       TextEditingController();
 
   final String writeName = '홍길동';
+
   final int holdCount = 3333;
 
-  Widget unFocusedContainer() {
+  @override
+  void dispose() {
+    _commentEditingController.dispose();
+    super.dispose();
+  }
+
+  Widget unFocusedContainer(context) {
     Map<dynamic, dynamic> data = {};
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5.0.h, horizontal: 15.0.w),
@@ -31,8 +53,8 @@ class CommentWrite extends StatelessWidget {
         children: [
           Expanded(
             child: TextFormField(
-              autofocus: autoFocus,
-              controller: commentEditingController,
+              autofocus: widget.autoFocus,
+              controller: _commentEditingController,
               decoration: InputDecoration(
                   isDense: true,
                   contentPadding:
@@ -51,8 +73,8 @@ class CommentWrite extends StatelessWidget {
                       borderRadius: BorderRadius.circular(17.0),
                       borderSide: const BorderSide(color: Color(0xfff8f8f8)))),
               minLines: 1,
-              maxLines: 10,
-              keyboardType: TextInputType.text,
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
             ),
           ),
           SizedBox(
@@ -60,17 +82,21 @@ class CommentWrite extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              data.putIfAbsent("postNo", () => postNo);
-              data.putIfAbsent("upperCmtNo", () => upperCmtNo);
+              data.putIfAbsent("postNo", () => widget.postNo);
+              data.putIfAbsent("upperCmtNo", () => widget.upperCmtNo);
               data.putIfAbsent(
-                  "commentText",
-                  () => commentEditingController.value.text);
+                  "commentText", () => _commentEditingController.value.text);
               //TODO: 작성자의 정보로 변경할것.
-              data.putIfAbsent(
-                  "writeNm", () => writeName);
-              data.putIfAbsent("onskTisuCnt",
-                  () => holdCount);
+              data.putIfAbsent("writeNm", () => writeName);
+              data.putIfAbsent("onskTisuCnt", () => holdCount);
               data.putIfAbsent("userId", () => "1");
+
+              await CommentWriteService().uploadComment(data);
+              data.clear();
+              _commentEditingController.clear();
+              _onRefresh(context);
+              FocusManager.instance.primaryFocus?.unfocus();
+
             },
             style: ElevatedButton.styleFrom(
                 minimumSize: Size.zero,
@@ -92,6 +118,6 @@ class CommentWrite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return unFocusedContainer();
+    return unFocusedContainer(context);
   }
 }

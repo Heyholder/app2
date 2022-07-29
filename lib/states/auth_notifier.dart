@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 class AuthenticationNotifier extends ChangeNotifier {
-  bool _isAuthenticated = false;
+  //TODO: true를 false로 변경할것.
+  bool _isAuthenticated = true;
 
   bool get isAuthenticated => _isAuthenticated;
 

@@ -1,11 +1,11 @@
-import 'package:app/service/post_detail_service.dart';
+import 'package:app/states/post_notifier.dart';
 import 'package:app/view/comment/comment_list.dart';
 import 'package:app/view/comment/comment_write.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:provider/provider.dart';
 import '../writer_info.dart';
 
 class PostScreen extends StatefulWidget {
@@ -22,7 +22,22 @@ class PostScreen extends StatefulWidget {
   State<PostScreen> createState() => _PostScreenState();
 }
 
+
 class _PostScreenState extends State<PostScreen> {
+  bool init = false;
+
+  @override
+  void initState(){
+    if(!init){
+      _onRefresh(context);
+    }
+    super.initState();
+  }
+  Future<void> _onRefresh(BuildContext context) async {
+    await Provider.of<PostNotifier>(context, listen: false)
+        .getPost(widget.postNo);
+  }
+
   Widget appbarContainer() {
     return AppBar(
       elevation: 0,
@@ -50,10 +65,8 @@ class _PostScreenState extends State<PostScreen> {
       ],
       title: Text(
         widget._stockName,
-        style: TextStyle(
-            color: const Color(0xff1E1E1E),
-            fontSize: 18.0.sp,
-            fontWeight: FontWeight.w500),
+        style:
+            Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 18.0.sp),
       ),
       centerTitle: true,
     );
@@ -62,10 +75,8 @@ class _PostScreenState extends State<PostScreen> {
   Widget category() {
     return Text(
       '이야기방',
-      style: TextStyle(
-          fontSize: 13.0.sp,
-          fontWeight: FontWeight.w400,
-          color: const Color(0xff1E1E1E)),
+      style:
+          Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 13.0.sp),
     );
   }
 
@@ -136,10 +147,10 @@ class _PostScreenState extends State<PostScreen> {
           ),
           Text(
             postContent,
-            style: TextStyle(
-                fontSize: 13.0.sp,
-                fontWeight: FontWeight.w400,
-                color: const Color(0xff1e1e1e)),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(fontSize: 13.0.sp),
           ),
           SizedBox(
             height: 20.0.h,
@@ -179,6 +190,7 @@ class _PostScreenState extends State<PostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final post = Provider.of<PostNotifier>(context).post;
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -192,34 +204,27 @@ class _PostScreenState extends State<PostScreen> {
           body: Column(
             children: [
               appbarContainer(),
-              FutureBuilder<Map>(
-                  future: PostDetailService().getPost(widget.postNo),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData == false) {
-                      return Expanded(
-                          child: Container(
-                        width: 375.0.w,
-                        color: Colors.white,
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ));
-                    } else {
-                      return Expanded(
-                        child: Scrollbar(
+              Expanded(
+                  child: (post.isNotEmpty)
+                      ? RefreshIndicator(
+                          onRefresh: () => _onRefresh(context),
                           child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
                             child: Column(
                               children: [
-                                postContainer(context, snapshot.data!["post"]),
-                                CommentList(
-                                    comments: snapshot.data!["commentList"]),
+                                postContainer(context, post["post"]),
+                                CommentList(comments: post["commentList"])
                               ],
                             ),
                           ),
-                        ),
-                      );
-                    }
-                  }),
+                        )
+                      : Container(
+                          width: 375.0.w,
+                          color: Colors.white,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        )),
               CommentWrite(
                 autoFocus: false,
                 upperCmtNo: 0,

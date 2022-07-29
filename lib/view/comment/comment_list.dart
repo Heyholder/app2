@@ -9,7 +9,7 @@ class CommentList extends StatelessWidget {
   final List<CommentModel> comments;
 
   @override
-  Widget build(BuildContext context) {
+  ListView build(BuildContext context) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
