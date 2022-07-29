@@ -22,18 +22,17 @@ class PostScreen extends StatefulWidget {
   State<PostScreen> createState() => _PostScreenState();
 }
 
-
 class _PostScreenState extends State<PostScreen> {
   bool init = false;
 
   @override
   void initState(){
     if(!init){
-      _onRefresh(context);
+      _onRefresh();
     }
     super.initState();
   }
-  Future<void> _onRefresh(BuildContext context) async {
+  Future<void> _onRefresh() async {
     await Provider.of<PostNotifier>(context, listen: false)
         .getPost(widget.postNo);
   }
@@ -190,7 +189,8 @@ class _PostScreenState extends State<PostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final post = Provider.of<PostNotifier>(context).post;
+    final postData = Provider.of<PostNotifier>(context).post;
+    final comments = Provider.of<PostNotifier>(context).comments;
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -205,15 +205,15 @@ class _PostScreenState extends State<PostScreen> {
             children: [
               appbarContainer(),
               Expanded(
-                  child: (post.isNotEmpty)
+                  child: (postData.isNotEmpty)
                       ? RefreshIndicator(
-                          onRefresh: () => _onRefresh(context),
+                          onRefresh: _onRefresh,
                           child: SingleChildScrollView(
                             physics: const AlwaysScrollableScrollPhysics(),
                             child: Column(
                               children: [
-                                postContainer(context, post["post"]),
-                                CommentList(comments: post["commentList"])
+                                postContainer(context, postData["post"]),
+                                CommentList(comments: comments)
                               ],
                             ),
                           ),

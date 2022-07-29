@@ -24,7 +24,7 @@ class _CommentWriteState extends State<CommentWrite> {
 
   Future<void> _onRefresh(BuildContext context) async {
     await Provider.of<PostNotifier>(context, listen: false)
-        .getPost(widget.postNo);
+        .getComments(widget.postNo);
   }
   final TextEditingController _commentEditingController =
       TextEditingController();
