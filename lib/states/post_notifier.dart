@@ -1,6 +1,4 @@
-import 'package:app/model/postModel.dart';
 import 'package:app/service/post_detail_service.dart';
-import 'package:app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import '../model/commentModel.dart';
 

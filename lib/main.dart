@@ -1,5 +1,6 @@
 import 'package:app/router/locations.dart';
 import 'package:app/states/auth_notifier.dart';
+import 'package:app/states/comment_notifier.dart';
 import 'package:app/states/post_notifier.dart';
 import 'package:app/utils/material_color.dart';
 import 'package:beamer/beamer.dart';
@@ -15,7 +16,11 @@ final _routerDelegate = BeamerDelegate(
   guards: [
     BeamGuard(
       beamToNamed: (origin, target) => '/auth',
-      pathPatterns: ['/', ...PostLocation().pathPatterns],
+      pathPatterns: [
+        '/',
+        ...PostLocation().pathPatterns,
+        ...CommentLocation().pathPatterns
+      ],
       check: (context, location) {
         return Provider.of<AuthenticationNotifier>(context, listen: false)
             .isAuthenticated;
@@ -30,8 +35,8 @@ final _routerDelegate = BeamerDelegate(
       },
     )
   ],
-  locationBuilder:
-      BeamerLocationBuilder(beamLocations: [HomeLocation(), PostLocation()]),
+  locationBuilder: BeamerLocationBuilder(
+      beamLocations: [HomeLocation(), PostLocation(), CommentLocation()]),
 );
 
 class MyApp extends StatelessWidget {
@@ -46,7 +51,9 @@ class MyApp extends StatelessWidget {
           providers: [
             ChangeNotifierProvider<AuthenticationNotifier>.value(
                 value: authNotifier),
-            ChangeNotifierProvider<PostNotifier>(create: (_) => PostNotifier())
+            ChangeNotifierProvider<PostNotifier>(create: (_) => PostNotifier()),
+            ChangeNotifierProvider<CommentNotifier>(
+                create: (_) => CommentNotifier())
           ],
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,

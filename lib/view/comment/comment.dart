@@ -1,4 +1,6 @@
 import 'package:app/model/commentModel.dart';
+import 'package:app/router/locations.dart';
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../custom_text_button.dart';
@@ -51,7 +53,12 @@ class Comment extends StatelessWidget {
                 width: 16.0.w,
               ),
               CustomTextButton(
-                  text: "댓글달기", onPressed: () {}, fontSize: 10.0.sp)
+                  text: "댓글달기",
+                  onPressed: () {
+                    Beamer.of(context)
+                        .beamToNamed('/$locationComment/$postNo/$commentNo');
+                  },
+                  fontSize: 10.0.sp)
             ],
           )
         ],

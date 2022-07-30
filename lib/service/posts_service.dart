@@ -3,12 +3,8 @@ import 'package:app/utils/logger.dart';
 import 'package:dio/dio.dart';
 import '../utils/network.dart';
 
-class PostListService {
-  final String stockCode;
-
-  PostListService({required this.stockCode});
-
-  Future<List<PostModel>> getPosts() async {
+class PostsService {
+  Future<List<PostModel>> getPosts(String stockCode) async {
     String ip = "";
     ip = ipAddress();
 
@@ -17,8 +13,8 @@ class PostListService {
       logger.e(e.message);
     });
     List<dynamic> dataList = response.data["list"];
-    List<PostModel> postList = List<PostModel>.from(
+    List<PostModel> posts = List<PostModel>.from(
         dataList.map((data) => PostModel.fromJson(data)).toList());
-    return postList;
+    return posts;
   }
 }

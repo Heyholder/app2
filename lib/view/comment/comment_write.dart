@@ -1,4 +1,5 @@
 import 'package:app/service/comment_write_service.dart';
+import 'package:app/states/comment_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ class CommentWrite extends StatefulWidget {
       required this.postNo})
       : super(key: key);
   final bool autoFocus;
-  final int upperCmtNo;
+  final String upperCmtNo;
   final String postNo;
 
   @override
@@ -22,13 +23,10 @@ class CommentWrite extends StatefulWidget {
 
 class _CommentWriteState extends State<CommentWrite> {
 
-  Future<void> _onRefresh(BuildContext context) async {
-    await Provider.of<PostNotifier>(context, listen: false)
-        .getComments(widget.postNo);
-  }
   final TextEditingController _commentEditingController =
       TextEditingController();
 
+  //TODO: 작성자의 정보로 변경할것.
   final String writeName = '홍길동';
 
   final int holdCount = 3333;
@@ -86,7 +84,7 @@ class _CommentWriteState extends State<CommentWrite> {
               data.putIfAbsent("upperCmtNo", () => widget.upperCmtNo);
               data.putIfAbsent(
                   "commentText", () => _commentEditingController.value.text);
-              //TODO: 작성자의 정보로 변경할것.
+
               data.putIfAbsent("writeNm", () => writeName);
               data.putIfAbsent("onskTisuCnt", () => holdCount);
               data.putIfAbsent("userId", () => "1");
@@ -94,9 +92,14 @@ class _CommentWriteState extends State<CommentWrite> {
               await CommentWriteService().uploadComment(data);
               data.clear();
               _commentEditingController.clear();
-              _onRefresh(context);
+              if (widget.upperCmtNo == "0") {
+                await Provider.of<PostNotifier>(context, listen: false)
+                    .getComments(widget.postNo);
+              } else {
+                await Provider.of<CommentNotifier>(context, listen: false)
+                    .getComments(widget.postNo, widget.upperCmtNo);
+              }
               FocusManager.instance.primaryFocus?.unfocus();
-
             },
             style: ElevatedButton.styleFrom(
                 minimumSize: Size.zero,

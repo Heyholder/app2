@@ -1,5 +1,5 @@
 import 'package:app/router/locations.dart';
-import 'package:app/service/post_list_service.dart';
+import 'package:app/service/posts_service.dart';
 import 'package:app/model/postModel.dart';
 import 'package:app/view/count_container.dart';
 import 'package:app/view/stock_info.dart';
@@ -36,7 +36,7 @@ class _PostListScreenState extends State<PostListScreen> {
     if (_posts != null) {
       _posts.clear();
     }
-    _posts = await PostListService(stockCode: _stockCode).getPosts();
+    _posts = await PostsService().getPosts(_stockCode);
     setState(() {});
   }
 
@@ -79,8 +79,8 @@ class _PostListScreenState extends State<PostListScreen> {
     int holdCount = post.holdCount;
 
     const viewAsset = 'assets/images/ic_view.svg';
-    const likeAsset = 'assets/images/ic_thumbs.svg';
-    const commentAsset = 'assets/images/ic_reply.svg';
+    const likeAsset = 'assets/images/ic_thumbs_filled.svg';
+    const commentAsset = 'assets/images/ic_reply_filled.svg';
 
     return InkWell(
       onTap: () {
@@ -177,21 +177,23 @@ class _PostListScreenState extends State<PostListScreen> {
   Widget _listView() {
     return RefreshIndicator(
       onRefresh: _onRefresh,
-      child: Container(
-        color: Colors.white,
-        child: ListView.separated(
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) {
-              PostModel post = _posts[index];
-              return postContainer(context, post);
-            },
-            separatorBuilder: (context, index) {
-              return Divider(
-                height: 1.0.h,
-                thickness: 1.0.h,
-              );
-            },
-            itemCount: _posts.length),
+      child: Scrollbar(
+        child: Container(
+          color: Colors.white,
+          child: ListView.separated(
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                PostModel post = _posts[index];
+                return postContainer(context, post);
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  height: 1.0.h,
+                  thickness: 1.0.h,
+                );
+              },
+              itemCount: _posts.length),
+        ),
       ),
     );
   }

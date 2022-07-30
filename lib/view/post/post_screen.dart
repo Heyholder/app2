@@ -26,12 +26,13 @@ class _PostScreenState extends State<PostScreen> {
   bool init = false;
 
   @override
-  void initState(){
-    if(!init){
+  void initState() {
+    if (!init) {
       _onRefresh();
     }
     super.initState();
   }
+
   Future<void> _onRefresh() async {
     await Provider.of<PostNotifier>(context, listen: false)
         .getPost(widget.postNo);
@@ -158,27 +159,38 @@ class _PostScreenState extends State<PostScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SvgPicture.asset(
+                "assets/images/ic_thumbs.svg",
+                width: 21.0.w,
+                height: 21.0.h,
+              ),
               SizedBox(
                 width: 2.0.w,
               ),
               Text(
                 '$likeCount',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: Color(0xffE71915)),
               ),
               SizedBox(
                 width: 10.0.w,
               ),
-              Icon(
-                size: 17.0.r,
-                Icons.comment_outlined,
-                color: const Color(0xff696c75),
+              SvgPicture.asset(
+                "assets/images/ic_reply.svg",
+                width: 21.0.w,
+                height: 21.0.h,
               ),
               SizedBox(
                 width: 2.0.w,
               ),
               Text(
                 '$commentCount',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: Color(0xffE71915)),
               ),
             ],
           )
@@ -208,13 +220,15 @@ class _PostScreenState extends State<PostScreen> {
                   child: (postData.isNotEmpty)
                       ? RefreshIndicator(
                           onRefresh: _onRefresh,
-                          child: SingleChildScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            child: Column(
-                              children: [
-                                postContainer(context, postData["post"]),
-                                CommentList(comments: comments)
-                              ],
+                          child: Scrollbar(
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: Column(
+                                children: [
+                                  postContainer(context, postData["post"]),
+                                  CommentList(comments: comments)
+                                ],
+                              ),
                             ),
                           ),
                         )
@@ -227,7 +241,7 @@ class _PostScreenState extends State<PostScreen> {
                         )),
               CommentWrite(
                 autoFocus: false,
-                upperCmtNo: 0,
+                upperCmtNo: "0",
                 postNo: widget.postNo,
               )
             ],
