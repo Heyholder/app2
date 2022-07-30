@@ -1,4 +1,5 @@
 import 'package:app/states/post_notifier.dart';
+import 'package:app/utils/floadting_modal.dart';
 import 'package:app/view/comment/comment_list.dart';
 import 'package:app/view/comment/comment_write.dart';
 import 'package:beamer/beamer.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import '../custom_text_button.dart';
 import '../writer_info.dart';
 
 class PostScreen extends StatefulWidget {
@@ -81,6 +83,7 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Widget headLineContainer(userId) {
+    //TODO: 유저아이디 추출 하기.
     if (userId == widget._loginId) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,7 +95,8 @@ class _PostScreenState extends State<PostScreen> {
             iconSize: 25.0.r,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
-            onPressed: () {},
+            onPressed: () => showFloatingModalBottomSheet(
+                context: context, builder: (context) => floatingModal()),
           )
         ],
       );
@@ -101,9 +105,43 @@ class _PostScreenState extends State<PostScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           category(),
+          CustomTextButton(text: "신고하기", onPressed: () {}, fontSize: 10.0.sp),
         ],
       );
     }
+  }
+
+  Widget floatingModal() {
+    return Material(
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                "글 수정하기",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: const Color(0xff6474ff),
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text("글 삭제하기",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: const Color(0xffff6b68),
+                      fontSize: 16.0.sp,
+                      fontWeight: FontWeight.w400)),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget postContainer(context, post) {
@@ -159,11 +197,15 @@ class _PostScreenState extends State<PostScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                "assets/images/ic_thumbs.svg",
-                width: 21.0.w,
-                height: 21.0.h,
-              ),
+              IconButton(
+                  constraints: const BoxConstraints(),
+                  padding: EdgeInsets.zero,
+                  onPressed: () {},
+                  icon: SvgPicture.asset(
+                    "assets/images/ic_thumbs.svg",
+                    width: 21.0.w,
+                    height: 21.0.h,
+                  )),
               SizedBox(
                 width: 2.0.w,
               ),
@@ -172,7 +214,7 @@ class _PostScreenState extends State<PostScreen> {
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!
-                    .copyWith(color: Color(0xffE71915)),
+                    .copyWith(color: const Color(0xffE71915)),
               ),
               SizedBox(
                 width: 10.0.w,
@@ -190,7 +232,7 @@ class _PostScreenState extends State<PostScreen> {
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!
-                    .copyWith(color: Color(0xffE71915)),
+                    .copyWith(color: const Color(0xffE71915)),
               ),
             ],
           )

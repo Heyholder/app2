@@ -1,4 +1,5 @@
 import 'package:app/view/auth/auth_screen.dart';
+import 'package:app/view/comment/comment_revise_screen.dart';
 import 'package:app/view/comment/comment_screen.dart';
 import 'package:app/view/home/home_screen.dart';
 import 'package:app/view/post/post_screen.dart';
@@ -8,7 +9,8 @@ import 'package:flutter/material.dart';
 const locationHome = 'home';
 const locationAuth = 'auth';
 const locationPost = 'post';
-const locationComment = 'comment';
+const locationComment = 'post-comment';
+const locationCommentRevise = 'comment-revise';
 const postNo = "postNo";
 const commentNo = "commentNo";
 
@@ -61,28 +63,28 @@ class PostLocation extends BeamLocation<BeamState> {
 
 class CommentLocation extends BeamLocation<BeamState> {
   @override
-  List<Pattern> get pathPatterns => ['/$locationComment/:$postNo/:$commentNo'];
+  List<Pattern> get pathPatterns => [
+        '/$locationComment/:$postNo/:$commentNo',
+        '/$locationCommentRevise/:$commentNo'
+      ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     final String? postNoParameter = state.pathParameters[postNo];
     final String? commentNoParameter = state.pathParameters[commentNo];
-    if (postNoParameter != null && commentNoParameter != null) {
-      return [
+
+    return [
+      if (state.pathParameters.containsKey(postNo))
         BeamPage(
-            key: ValueKey('comment-$commentNoParameter'),
+            key: ValueKey('post-comment-$commentNoParameter'),
             child: CommentScreen(
-              postNo: postNoParameter,
-              commentNo: commentNoParameter,
-            ))
-      ];
-    } else {
-      return [
-        const BeamPage(
-            key: ValueKey(locationHome),
-            title: locationHome,
-            child: HomeScreen())
-      ];
-    }
+              postNo: postNoParameter!,
+              commentNo: commentNoParameter!,
+            )),
+      if (!state.pathParameters.containsKey(postNo))
+        BeamPage(
+            key: ValueKey('comment-revise-$commentNoParameter'),
+            child: CommentReviseScreen(commentNo: commentNoParameter!))
+    ];
   }
 }

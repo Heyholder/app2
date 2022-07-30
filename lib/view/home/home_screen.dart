@@ -1,7 +1,7 @@
 import 'package:app/view/hotcontent/hot_content_screen.dart';
 import 'package:app/view/myinfo/my_info.dart';
 import 'package:app/view/post/post_list_screen.dart';
-import 'package:app/view/propose/propose_list_screen.dart';
+import 'package:app/view/agenda/agenda_list_screen.dart';
 import 'package:app/view/write/write_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
           index: _bottomSelectedIndex,
           children: const [
             PostListScreen(),
-            ProposeListScreen(),
+            AgendaListScreen(),
             WriteScreen(),
             HotContentScreen(),
             MyInfoScreen()

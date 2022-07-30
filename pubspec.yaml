@@ -45,6 +45,7 @@ dependencies:
   flutter_screenutil:
   flutter_multi_formatter: ^2.5.8
   shared_preferences: ^2.0.15
+  modal_bottom_sheet: ^2.1.0
 
 
 
