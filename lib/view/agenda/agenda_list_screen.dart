@@ -28,8 +28,8 @@ class _AgendaListScreenState extends State<AgendaListScreen> {
   Future<void> _onRefresh() async {
     if (_agenda != null) {
       _agenda.clear();
+      //TODO: angenda service 추가 할것.
     }
-    _agenda = await AgendasService().getAgendas(_stockCode);
     setState(() {});
   }
 

@@ -3,6 +3,9 @@ import 'package:app/router/locations.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import '../../service/comment_service.dart';
+import '../../states/post_notifier.dart';
 import '../custom_text_button.dart';
 import '../writer_info.dart';
 
@@ -13,11 +16,60 @@ class Comment extends StatelessWidget {
   //TODO: 사용자 아이디 추출할것.
   final _loginId = "1";
 
+  Widget ownWritingContainer(context, comment) {
+    final String writerId = comment.insId;
+    final String postNo = comment.postNo;
+    final String? commentNo = comment.commentNo;
+    final String? commentContent = comment.commentContent;
+
+    return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+      CustomTextButton(
+          text: "수정",
+          onPressed: () {
+            Beamer.of(context).beamToNamed('/$locationCommentRevise/$commentNo',
+                data: {
+                  "writeId": writerId,
+                  "postNo": postNo,
+                  "commentContent": commentContent
+                });
+          },
+          fontSize: 10.0.sp),
+      SizedBox(
+        width: 16.0.w,
+      ),
+      CustomTextButton(
+          text: "삭제",
+          //TODO: 대댓글 창에서 삭제시 행동 넣기.
+          onPressed: () async {
+            CommentService().deleteComment(commentNo);
+            await Provider.of<PostNotifier>(context, listen: false)
+                .getPost(postNo);
+          },
+          fontSize: 10.0.sp)
+    ]);
+  }
+
+  Widget someoneWritingContainer(context, comment) {
+    final String postNo = comment.postNo;
+    final String? commentNo = comment.commentNo;
+    return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+      CustomTextButton(text: "신고하기", onPressed: () {}, fontSize: 10.0.sp),
+      SizedBox(
+        width: 16.0.w,
+      ),
+      CustomTextButton(
+          text: "댓글달기",
+          onPressed: () {
+            Beamer.of(context)
+                .beamToNamed('/$locationComment/$postNo/$commentNo');
+          },
+          fontSize: 10.0.sp)
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final String? writerId = comment.insId;
-    final String? postNo = comment.postNo;
-    final String? commentNo = comment.commentNo;
     final String? parentNo = comment.parentCommentNo;
     final String? writerName = comment.writerName;
     final int? holdCount = comment.holdCount;
@@ -48,50 +100,11 @@ class Comment extends StatelessWidget {
           SizedBox(
             height: 9.0.h,
           ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: (writerId == _loginId)
-                  ? [
-                      CustomTextButton(
-                          text: "수정",
-                          onPressed: () {
-                            Beamer.of(context).beamToNamed(
-                                '/$locationCommentRevise/$commentNo',
-                                data: {
-                                  "writeId": writerId,
-                                  "postNo": postNo,
-                                  "commentContent": commentContent
-                                });
-                          },
-                          fontSize: 10.0.sp),
-                      SizedBox(
-                        width: 16.0.w,
-                      ),
-                      CustomTextButton(
-                          text: "삭제",
-                          onPressed: () {
-                            Beamer.of(context).beamToNamed(
-                                '/$locationComment/$postNo/$commentNo');
-                          },
-                          fontSize: 10.0.sp)
-                    ]
-                  : [
-                      CustomTextButton(
-                          text: "신고하기", onPressed: () {}, fontSize: 10.0.sp),
-                      SizedBox(
-                        width: 16.0.w,
-                      ),
-                      CustomTextButton(
-                          text: "댓글달기",
-                          onPressed: () {
-                            Beamer.of(context).beamToNamed(
-                                '/$locationComment/$postNo/$commentNo');
-                          },
-                          fontSize: 10.0.sp)
-                    ])
+          (writerId == _loginId)
+              ? ownWritingContainer(context, comment)
+              : someoneWritingContainer(context, comment)
         ],
       ),
     );
   }
 }
-

@@ -20,24 +20,12 @@ class PostListScreen extends StatefulWidget {
 class _PostListScreenState extends State<PostListScreen> {
   //TODO:stockCode api에서 받아오게 수정할 것.
   final String _stockCode = "000000";
-  var _posts;
-  bool _init = false;
-
-  @override
-  void initState() {
-    if (!_init) {
-      _onRefresh();
-      _init = true;
-    }
-    super.initState();
-  }
+  GlobalKey _key = GlobalKey();
 
   Future<void> _onRefresh() async {
-    if (_posts != null) {
-      _posts.clear();
-    }
-    _posts = await PostsService().getPosts(_stockCode);
+    _key = GlobalKey();
     setState(() {});
+    Future.value(null);
   }
 
   Widget postContentContainer(context, postContent) {
@@ -174,16 +162,17 @@ class _PostListScreenState extends State<PostListScreen> {
     );
   }
 
-  Widget _listView() {
+  Widget _listView(List<PostModel> posts) {
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: Scrollbar(
         child: Container(
+          key: _key,
           color: Colors.white,
           child: ListView.separated(
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
-                PostModel post = _posts[index];
+                PostModel post = posts[index];
                 return postContainer(context, post);
               },
               separatorBuilder: (context, index) {
@@ -192,7 +181,7 @@ class _PostListScreenState extends State<PostListScreen> {
                   thickness: 1.0.h,
                 );
               },
-              itemCount: _posts.length),
+              itemCount: posts.length),
         ),
       ),
     );
@@ -205,15 +194,23 @@ class _PostListScreenState extends State<PostListScreen> {
       child: Column(
         children: [
           StockInfo(),
-          Expanded(
-              child: (_posts != null)
-                  ? (_posts.isNotEmpty)
-                      ? _listView()
-                      : noContentContainer(context)
-                  : Container(
-                      width: 375.0.w,
-                      color: Colors.white,
-                      child: const Center(child: CircularProgressIndicator()))),
+          FutureBuilder<List<PostModel>>(
+              future: PostsService().getPosts(_stockCode),
+              builder: (context, snapshot) {
+                if (snapshot.hasData == false) {
+                  return Expanded(
+                    child: Container(
+                        width: 375.0.w,
+                        color: Colors.white,
+                        child: const Center(child: CircularProgressIndicator())),
+                  );
+                } else {
+                  return Expanded(
+                      child: (snapshot.data!.isNotEmpty)
+                          ? _listView(snapshot.data!)
+                          : noContentContainer(context));
+                }
+              }),
         ],
       ),
     );

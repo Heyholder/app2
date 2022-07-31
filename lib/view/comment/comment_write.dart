@@ -1,4 +1,4 @@
-import 'package:app/service/comment_write_service.dart';
+import 'package:app/service/comment_service.dart';
 import 'package:app/states/comment_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +22,6 @@ class CommentWrite extends StatefulWidget {
 }
 
 class _CommentWriteState extends State<CommentWrite> {
-
   final TextEditingController _commentEditingController =
       TextEditingController();
 
@@ -89,12 +88,12 @@ class _CommentWriteState extends State<CommentWrite> {
               data.putIfAbsent("onskTisuCnt", () => holdCount);
               data.putIfAbsent("userId", () => "1");
 
-              await CommentWriteService().uploadComment(data);
+              await CommentService().uploadComment(data);
               data.clear();
               _commentEditingController.clear();
               if (widget.upperCmtNo == "0") {
                 await Provider.of<PostNotifier>(context, listen: false)
-                    .getComments(widget.postNo);
+                    .getPost(widget.postNo);
               } else {
                 await Provider.of<CommentNotifier>(context, listen: false)
                     .getComments(widget.postNo, widget.upperCmtNo);

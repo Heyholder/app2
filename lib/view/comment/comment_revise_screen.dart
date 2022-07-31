@@ -1,4 +1,4 @@
-import 'package:app/service/comment_revise_service.dart';
+import 'package:app/service/comment_service.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -94,7 +94,7 @@ class _CommentReviseScreenState extends State<CommentReviseScreen> {
     data.putIfAbsent("postNo", () => postNo);
     data.putIfAbsent("commentText", () => _commentEditingController.text);
     data.putIfAbsent("commentNo", () => widget.commentNo);
-    await CommentReviseService().reviseComment(widget.commentNo, data);
+    await CommentService().reviseComment(widget.commentNo, data);
     Beamer.of(context).beamBack();
   }
 }

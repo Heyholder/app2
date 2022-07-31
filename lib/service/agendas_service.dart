@@ -9,9 +9,7 @@ class AgendasService {
     ip = ipAddress();
 
     final uri = Uri.parse('$ip/api/v1/$stockCode/agendas');
-    final response = await Dio().getUri(uri).catchError((e) {
-      logger.e(e.message);
-    });
+    final response = await Dio().getUri(uri);
     logger.d(response.data);
     List<dynamic> dataList = response.data["list"];
 

@@ -11,8 +11,8 @@ const locationAuth = 'auth';
 const locationPost = 'post';
 const locationComment = 'post-comment';
 const locationCommentRevise = 'comment-revise';
-const postNo = "postNo";
-const commentNo = "commentNo";
+const _postNo = "postNo";
+const _commentNo = "commentNo";
 
 class HomeLocation extends BeamLocation<BeamState> {
   @override
@@ -37,11 +37,11 @@ class HomeLocation extends BeamLocation<BeamState> {
 
 class PostLocation extends BeamLocation<BeamState> {
   @override
-  List<Pattern> get pathPatterns => ['/$locationPost/:$postNo'];
+  List<Pattern> get pathPatterns => ['/$locationPost/:$_postNo'];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
-    final String? postNoParameter = state.pathParameters[postNo];
+    final String? postNoParameter = state.pathParameters[_postNo];
     if (postNoParameter != null) {
       return [
         BeamPage(
@@ -64,24 +64,24 @@ class PostLocation extends BeamLocation<BeamState> {
 class CommentLocation extends BeamLocation<BeamState> {
   @override
   List<Pattern> get pathPatterns => [
-        '/$locationComment/:$postNo/:$commentNo',
-        '/$locationCommentRevise/:$commentNo'
+        '/$locationComment/:$_postNo/:$_commentNo',
+        '/$locationCommentRevise/:$_commentNo'
       ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
-    final String? postNoParameter = state.pathParameters[postNo];
-    final String? commentNoParameter = state.pathParameters[commentNo];
+    final String? postNoParameter = state.pathParameters[_postNo];
+    final String? commentNoParameter = state.pathParameters[_commentNo];
 
     return [
-      if (state.pathParameters.containsKey(postNo))
+      if (state.pathParameters.containsKey(_postNo))
         BeamPage(
             key: ValueKey('post-comment-$commentNoParameter'),
             child: CommentScreen(
               postNo: postNoParameter!,
               commentNo: commentNoParameter!,
             )),
-      if (!state.pathParameters.containsKey(postNo))
+      if (!state.pathParameters.containsKey(_postNo))
         BeamPage(
             key: ValueKey('comment-revise-$commentNoParameter'),
             child: CommentReviseScreen(commentNo: commentNoParameter!))
